@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mega Fitness Centre</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { padding-top: 185px !important; }
+        .language-bar { position: fixed; top: 0; left: 0; z-index: 1100; width: 100%; height: 35px; background: #000; display: flex; justify-content: flex-end; align-items: center; padding-right: 30px; gap: 8px; }
+        .language-bar button { background: none; border: none; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; padding: 0; }
+        .language-bar button:hover { color: #740102; }
+        .language-bar span { color: #fff; }
+        .navbar { top: 35px !important; }
+        @media (max-width: 991.98px) { body { padding-top: 145px !important; } }
+        .our-team {
+            height: 400px;
+            margin: 50px auto;
+        }
+
+        .marquee {
+            display: flex;
+            gap: 1rem;
+            overflow: hidden;
+        }
+
+        .marquee__group {
+            min-width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            gap: 1rem;
+            flex-shrink: 0;
+            animation: scroll 40s linear infinite;
+        }
+
+        .marquee__group img {
+            width: 150px;
+            height: 190px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .marquee--borders {
+            padding: 0.5rem 0;
+            border-top: 2px solid #740102;
+            border-bottom: 2px solid #000;
+        }
+
+        .marquee--borders p {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #740102;
+        }
+
+        .marquee--reverse .marquee__group {
+            animation-direction: reverse;
+        }
+
+        @keyframes scroll {
+            to {
+                transform: translateX(-100%);
+            }
+        }
+
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .day {
+            height: 110px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            background-color: #000;
+            transition: 0.2s;
+        }
+
+        .day::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .day strong,
+        .day span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .day strong {
+            font-size: 28px;
+        }
+
+        .day span {
+            position: absolute;
+            bottom: 10px;
+            opacity: 0;
+        }
+
+        .day:hover {
+            transform: scale(1.05);
+        }
+
+        .day:hover span {
+            opacity: 1;
+        }
+
+        .day:hover strong {
+            opacity: 0;
+        }
+        .this-month #title{
+            color: #740102;
+            text-align: center;
+        }
+
+        .this-month{
+            margin-bottom: 50px;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="language-bar" aria-label="Choose language"><button type="button" data-language="mk" onclick="changeLanguage('mk')">MK</button><span aria-hidden="true">|</span><button type="button" data-language="en" onclick="changeLanguage('en')">EN</button></div>
+
+<nav class="navbar navbar-expand-lg">
+
+    <div class="container-fluid">
+
+        <a class="navbar-brand" href="home.html">
+            <img src="images/logo_top.png" alt="Logo">
+        </a>
+
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarMenu"
+                aria-controls="navbarMenu"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarMenu">
+
+            <ul class="navbar-nav">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="workouts.html">
+                        Workouts
+                    </a>
+                </li>
+
+                <li class="nav-item cities-dropdown">
+
+                    <a class="nav-link cities-link" href="#">
+                        Cities
+                    </a>
+
+                    <ul class="custom-menu">
+
+                        <li>
+                            <a href="#">Skopje</a>
+                        </li>
+
+                        <li>
+                            <a href="#">Ohrid</a>
+                        </li>
+
+                        <li>
+                            <a href="#">Bitola</a>
+                        </li>
+
+                        <li>
+                            <a href="#">Tetovo</a>
+                        </li>
+
+                    </ul>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<div class="our-team">
+    <div class="marquee">
+        <div class="marquee__group">
+            <img src="images/coach_1.jpg">
+            <img src="images/coach_2.jpg">
+            <img src="images/coach_3.jpg">
+            <img src="images/coach_4.jpg">
+            <img src="images/coach_5.jpg">
+        </div>
+
+        <div aria-hidden="true" class="marquee__group">
+            <img src="images/coach_6.jpg">
+            <img src="images/coach_7.jpg">
+            <img src="images/coach_8.jpg">
+            <img src="images/coach_9.jpg">
+            <img src="images/coach_10.png">
+        </div>
+    </div>
+
+    <div class="marquee marquee--borders" style="--duration: 100s">
+        <div class="marquee__group">
+            <p>Meet the transformers</p>
+            <p aria-hidden="true">Meet the transformers</p>
+            <p aria-hidden="true">Meet the transformers</p>
+        </div>
+
+        <div aria-hidden="true" class="marquee__group">
+            <p>Meet the transformers</p>
+            <p>Meet the transformers</p>
+            <p>Meet the transformers</p>
+        </div>
+    </div>
+
+    <div class="marquee marquee--reverse">
+        <div class="marquee__group">
+            <img src="images/coach_1.jpg">
+            <img src="images/coach_2.jpg">
+            <img src="images/coach_3.jpg">
+            <img src="images/coach_4.jpg">
+            <img src="images/coach_5.jpg">
+        </div>
+
+        <div aria-hidden="true" class="marquee__group">
+            <img src="images/coach_6.jpg">
+            <img src="images/coach_7.jpg">
+            <img src="images/coach_8.jpg">
+            <img src="images/coach_9.jpg">
+            <img src="images/coach_10.png">
+        </div>
+    </div>
+</div>
+
+<section class="our-workouts">
+    <div class="container">
+
+        <div class="title">Our Workouts</div>
+
+        <div class="row">
+
+            <div class="col-4">
+                <img src="images/fit.jpg"
+                     class="workout-image"
+                     id="workoutImage"
+                     alt="Workout">
+            </div>
+
+            <div class="col-8">
+
+                <div class="workouts-list">
+
+                    <div class="workout-item" data-image="images/workout.jpg">
+
+                        <h2 class="workout-header">
+                            Workout
+                        </h2>
+
+                        <div class="workout-description">
+                            Build strength, improve your endurance, and challenge yourself with workouts designed to help you become stronger, healthier, and more confident.
+                        </div>
+
+                    </div>
+
+
+                    <div class="workout-item" data-image="images/boxing.jpg">
+
+                        <h2 class="workout-header">
+                            Boxing
+                        </h2>
+
+                        <div class="workout-description">
+                            Develop your speed, power, coordination, and technique while building confidence through dynamic and challenging boxing training.
+                        </div>
+
+                    </div>
+
+
+                    <div class="workout-item" data-image="images/running.jpg">
+
+                        <h2 class="workout-header">
+                            Running
+                        </h2>
+
+                        <div class="workout-description">
+                            Improve your stamina, endurance, and overall fitness with running sessions designed to keep you moving, motivated, and ready to reach your goals.
+                        </div>
+
+                    </div>
+
+
+                    <div class="workout-item" data-image="images/fit.jpg">
+
+                        <h2 class="workout-header">
+                            Fitness
+                        </h2>
+
+                        <div class="workout-description">
+                            Take your fitness to the next level with exercises that improve your strength, endurance, mobility, and overall physical performance.
+                        </div>
+
+                    </div>
+
+
+                    <div class="workout-item" data-image="images/yoga.jpg">
+
+                        <h2 class="workout-header">
+                            Yoga
+                        </h2>
+
+                        <div class="workout-description">
+                            Improve your flexibility, balance, strength, and focus while relaxing your body and mind through a combination of controlled movements and breathing.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="this-month">
+    <div id="title" class="center">
+        <h1>October 2026</h1>
+        <p>Classes this month</p>
+    </div>
+
+    <div class="calendar" id="calendar"></div>
+
+</section>
+
+<footer class="mt-auto text-white"
+        style="background: linear-gradient(135deg, #180000 0%, #4a0000 50%, #050505 100%);">
+
+    <div class="py-5">
+
+        <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
+
+            <div>
+                <h4 class="mb-1">Ready to get started?</h4>
+
+                <p class="mb-0 opacity-75">
+                    Start your fitness journey today with Mega Gym.
+                </p>
+            </div>
+
+            <a href="form.html" class="btn btn-light btn-lg flex-shrink-0">
+                Join us now
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="py-3 border-top border-secondary">
+
+        <div class="container d-flex justify-content-between small text-white-50">
+
+            <span>&copy; 2026 Mega Gym</span>
+
+            <div class="d-flex gap-3">
+
+                <a class="text-white-50 text-decoration-none" href="">
+                    Workouts
+                </a>
+
+                <a class="text-white-50 text-decoration-none" href="">
+                    Cities
+                </a>
+
+                <a class="text-white-50 text-decoration-none" href="">
+                    Contact
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script src="script.js"></script>
+
+
+<script>
+    const workouts = [
+        ["Workout", "images/workout.jpg"],
+        ["Boxing", "images/boxing.jpg"],
+        ["Running", "images/running.jpg"],
+        ["Fitness", "images/fit.jpg"],
+        ["Yoga", "images/yoga.jpg"]
+    ];
+
+    for (let day = 1; day <= 30; day++) {
+
+        let workout = workouts[(day - 1) % workouts.length];
+
+        document.getElementById("calendar").innerHTML += `
+        <div class="day" style="background-image: url('${workout[1]}')">
+            <strong>${day}</strong>
+            <span>${workout[0]}</span>
+        </div>
+    `;
+    }
+</script>
+
+<script>
+    const pageTranslations = {
+        "Workouts":"Тренинзи", "Cities":"Градови", "Logo":"Лого", "Toggle navigation":"Отвори навигација", "Choose language":"Избери јазик", "Workout":"Тренинг", "Boxing":"Бокс", "Running":"Трчање", "Fitness":"Фитнес", "Yoga":"Јога", "Skopje":"Скопје", "Ohrid":"Охрид", "Bitola":"Битола", "Tetovo":"Тетово", "Meet the transformers":"Запознајте ги трансформерите", "Our Workouts":"Нашите тренинзи",
+        "Build strength, improve your endurance, and challenge yourself with workouts designed to help you become stronger, healthier, and more confident.":"Изградете сила, подобрете ја издржливоста и предизвикајте се со тренинзи осмислени да ви помогнат да станете посилни, поздрави и посамоуверени.", "Develop your speed, power, coordination, and technique while building confidence through dynamic and challenging boxing training.":"Развивајте ја брзината, моќта, координацијата и техниката, а истовремено стекнувајте самодоверба преку динамичен и предизвикувачки боксерски тренинг.", "Improve your stamina, endurance, and overall fitness with running sessions designed to keep you moving, motivated, and ready to reach your goals.":"Подобрете ја издржливоста и општата кондиција со тренинзи по трчање што ќе ве одржат активни, мотивирани и подготвени да ги постигнете целите.", "Take your fitness to the next level with exercises that improve your strength, endurance, mobility, and overall physical performance.":"Подигнете ја кондицијата на повисоко ниво со вежби што ја подобруваат силата, издржливоста, подвижноста и целокупните физички перформанси.", "Improve your flexibility, balance, strength, and focus while relaxing your body and mind through a combination of controlled movements and breathing.":"Подобрете ја флексибилноста, рамнотежата, силата и концентрацијата, а истовремено опуштете ги телото и умот со контролирани движења и дишење.",
+        "October 2026":"Октомври 2026", "Classes this month":"Тренинзи овој месец", "Ready to get started?":"Подготвени сте да започнете?", "Start your fitness journey today with Mega Gym.":"Започнете го вашето фитнес-патување денес со Mega Gym.", "Join us now":"Придружете ни се", "Contact":"Контакт", "Title":"Тренинзи | Mega Gym"
+    };
+
+    const originalText = new WeakMap();
+
+    function changeLanguage(language) {
+        if (!['en', 'mk'].includes(language)) return;
+
+        document.documentElement.lang = language;
+
+        const walker = document.createTreeWalker(
+            document.body,
+            NodeFilter.SHOW_TEXT
+        );
+
+        let node;
+
+        while (node = walker.nextNode()) {
+            if (['SCRIPT', 'STYLE'].includes(node.parentElement?.tagName)) continue;
+
+            if (!originalText.has(node))
+                originalText.set(node, node.nodeValue);
+
+            const original = originalText.get(node);
+            const key = original.trim().replace(/\s+/g, ' ');
+
+            node.nodeValue = language === 'mk'
+                ? original.replace(original.trim(), pageTranslations[key] || original.trim())
+                : original;
+        }
+
+        document.querySelectorAll('[aria-label]').forEach(element => {
+            if (!element.dataset.originalLabel)
+                element.dataset.originalLabel = element.getAttribute('aria-label');
+
+            element.setAttribute(
+                'aria-label',
+                language === 'mk'
+                    ? pageTranslations[element.dataset.originalLabel] || element.dataset.originalLabel
+                    : element.dataset.originalLabel
+            );
+        });
+
+        document.querySelectorAll('.language-bar button').forEach(button => {
+            button.setAttribute('aria-pressed', button.dataset.language === language);
+        });
+
+        document.title = language === 'mk'
+            ? 'Мега фитнес центар'
+            : 'Mega Fitness Centre';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        changeLanguage('en');
+    });
+</script>
+</body>
+</html>

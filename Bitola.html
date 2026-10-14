@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      padding-top: 185px;
+      font-family: "Bungee", sans-serif;
+    }
+
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      visibility: hidden;
+      opacity: 0;
+      z-index: 1000;
+
+      transition: 0.4s;
+    }
+
+    .popup:target {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .popup-inner {
+      position: relative;
+
+      display: flex;
+
+      width: 70%;
+      max-width: 900px;
+      height: 500px;
+
+      background: white;
+
+      transform: scale(0.8);
+      transition: 0.4s;
+    }
+
+    .popup:target .popup-inner {
+      transform: scale(1);
+    }
+
+    .popup__photo {
+      width: 40%;
+      overflow: hidden;
+    }
+
+    .popup__photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .popup__text {
+      width: 60%;
+      padding: 50px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .popup__text span {
+      color: #740102;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .popup__text h1 {
+      font-size: 32px;
+      margin-bottom: 25px;
+      color: #111;
+    }
+
+    .popup__text p {
+      font-size: 12px;
+      line-height: 1.7;
+      color: #666;
+      font-family: Arial, sans-serif;
+    }
+
+    .popup__close {
+      position: absolute;
+      top: -15px;
+      right: -15px;
+
+      width: 40px;
+      height: 40px;
+
+      background: #740102;
+      color: white;
+
+      border-radius: 50%;
+
+      text-decoration: none;
+      text-align: center;
+      line-height: 40px;
+
+      font-weight: bold;
+    }
+
+    .language-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1100;
+      width: 100%;
+      height: 35px;
+      background: #000;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-right: 30px;
+      gap: 8px;
+    }
+
+    .language-bar button {
+      background: none;
+      border: none;
+      color: white;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .language-bar button:hover {
+      color: #740102;
+    }
+
+    .language-bar span {
+      color: white;
+    }
+
+    @keyframes pulse {
+      50% {
+        transform: scale(1.03);
+      }
+    }
+
+    .navbar {
+      position: fixed;
+      top: 35px;
+      left: 0;
+      z-index: 1000;
+
+      width: 100%;
+      height: 150px;
+
+      background: black;
+      padding: 0;
+    }
+
+    .navbar .container-fluid {
+      position: relative;
+      height: 100%;
+      padding: 0;
+    }
+
+    .navbar-brand {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+
+      transform: translate(-50%, -50%);
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar-brand img {
+      display: block;
+      width: clamp(110px, 10vw, 150px);
+    }
+
+    .navbar-collapse {
+      width: 100%;
+    }
+
+    .navbar-nav {
+      position: relative;
+
+      width: 100%;
+      height: 100%;
+
+      margin: 0;
+      padding: 0;
+
+      list-style: none;
+    }
+
+    .navbar-nav .nav-item:first-child {
+      position: absolute;
+      left: 18%;
+      top: 50%;
+
+      transform: translateY(-50%);
+      margin: 0;
+    }
+
+    .cities-dropdown {
+      position: absolute;
+      right: 18%;
+      top: 50%;
+
+      transform: translateY(-50%);
+      margin: 0;
+    }
+
+    .nav-link {
+      position: relative;
+      display: inline-block;
+
+      color: #740102 !important;
+      font-size: clamp(30px, 3.2vw, 50px);
+
+      line-height: 1;
+      padding: 0 !important;
+
+      text-decoration: none;
+    }
+
+    .nav-item > .nav-link::before,
+    .nav-item > .nav-link::after {
+      content: "";
+
+      position: absolute;
+      left: 0;
+
+      width: 100%;
+      height: 3px;
+
+      background: #740102;
+
+      transform: scaleX(0);
+      transition: transform 0.4s ease-out;
+    }
+
+    .nav-item > .nav-link::before {
+      top: -5px;
+      transform-origin: left;
+    }
+
+    .nav-item > .nav-link::after {
+      bottom: -5px;
+      transform-origin: right;
+    }
+
+    .nav-item > .nav-link:hover::before,
+    .nav-item > .nav-link:hover::after {
+      transform: scaleX(1);
+    }
+
+    .custom-menu {
+      position: absolute;
+      top: 55px;
+      right: 0;
+
+      margin: 0;
+      padding: 0;
+
+      list-style: none;
+      text-align: right;
+      white-space: nowrap;
+
+      opacity: 0;
+      visibility: hidden;
+
+      transform: translateY(-10px);
+
+      transition:
+              opacity 0.35s ease,
+              transform 0.35s ease;
+    }
+
+    .cities-dropdown:hover .custom-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .custom-menu a {
+      position: relative;
+      display: inline-block;
+
+      padding: 4px 0;
+
+      color: #740102;
+      font-size: clamp(20px, 2vw, 30px);
+
+      text-decoration: none;
+    }
+
+    .custom-menu a::after {
+      content: "";
+
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+
+      width: 100%;
+      height: 2px;
+
+      background: #740102;
+
+      transform: scaleX(0);
+      transform-origin: right;
+
+      transition: transform 0.4s ease-out;
+    }
+
+    .custom-menu a:hover::after {
+      transform: scaleX(1);
+    }
+
+    .navbar::after {
+      content: "";
+
+      position: absolute;
+      top: 150px;
+      left: 0;
+
+      width: 100%;
+      height: 0;
+
+      background: black;
+
+      transition: height 0.35s ease;
+
+      z-index: -1;
+    }
+
+    .navbar:has(.cities-dropdown:hover)::after {
+      height: 230px;
+    }
+
+    .navbar-toggler {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+
+      transform: translateY(-50%);
+
+      border: none;
+      padding: 5px;
+    }
+
+    .navbar-toggler:focus {
+      box-shadow: none;
+    }
+
+    .navbar-toggler-icon {
+      filter:
+              brightness(0)
+              saturate(100%)
+              invert(10%)
+              sepia(90%)
+              saturate(4000%)
+              hue-rotate(350deg)
+              brightness(60%);
+    }
+
+    @media (max-width: 991.98px) {
+      body { padding-top: 145px; }
+      .navbar {
+        height: 110px;
+      }
+
+      .navbar-brand img {
+        width: 100px;
+      }
+
+      .navbar-collapse {
+        position: absolute;
+
+        top: 110px;
+        left: 0;
+
+        width: 100%;
+        height: auto;
+
+        background: black;
+      }
+
+      .navbar-nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        height: auto;
+        padding: 20px 0;
+
+        gap: 10px;
+      }
+
+      .navbar-nav .nav-item:first-child,
+      .cities-dropdown {
+        position: static;
+
+        transform: none;
+        margin: 0;
+      }
+
+      .nav-link {
+        font-size: 30px;
+      }
+
+      .custom-menu {
+        position: static;
+
+        margin-top: 10px;
+
+        text-align: center;
+      }
+
+      .navbar::after {
+        display: none;
+      }
+    }
+    .city {
+      position: relative;
+      width: 100%;
+      height: 500px;
+    }
+
+    .city img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .city-name {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #740102;
+      font-size: 200px;
+      font-family: "Russo One", sans-serif;
+      text-shadow: 2px 2px 8px black;
+    }
+
+    .booking{
+      width: 100%;
+      min-height: 700px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: black;
+      color: white;
+      padding: 40px 10%;
+      gap: 50px;
+    }
+    .info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .info h1 {
+      font-size: 100px;
+      color: #740102;
+      margin-bottom: 70px;
+      margin-top: 10px;
+    }
+
+    .steps {
+      max-width: 600px;
+    }
+
+    .booking-steps p {
+      font-size: 60px;
+      margin-bottom: 25px;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-decoration: none;
+    }
+
+    .booking-steps strong {
+      color: white;
+      font-size: 20px;
+      margin-right: 8px;
+    }
+    .form-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .form {
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-group label {
+      display: block;
+      font-family: "Russo One", sans-serif;
+      font-size: 20px;
+      margin-bottom: 8px;
+      color: white;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      height: 50px;
+      padding: 10px 15px;
+      background: transparent;
+      border: 2px solid #740102;
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 20px;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: white;
+    }
+
+    .form-group select option {
+      color: black;
+    }
+
+    .form-group small {
+      display: block;
+      margin-top: 8px;
+      font-family: Arial, sans-serif;
+      font-size: 15px;
+      color: white;
+      line-height: 1.4;
+    }
+
+    .privacy-check {
+      display: flex;
+      gap: 10px;
+      margin: 25px 0;
+    }
+
+    .privacy-check input {
+      margin-top: 4px;
+    }
+
+    .privacy-check label {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+    }
+
+    .privacy-check a {
+      color: #740102;
+    }
+
+    .booking-form button {
+      width: 100%;
+      height: 60px;
+      border: 2px solid #740102;
+      background: #740102;
+      color: white;
+      font-family: "Russo One", sans-serif;
+      font-size: 22px;
+    }
+
+    .booking-form button:hover {
+      background: transparent;
+      color: #740102;
+    }
+    .map-container {
+      background-color: black;
+      width: 100%;
+      margin: 0 auto;
+      padding: 60px 0;
+    }
+
+    .map-container h1 {
+      color: #740102;
+      margin: 0 0 10px 50px;
+    }
+    .map-container iframe {
+      display: block;
+      width: 60%;
+      height: 550px;
+      border: 0;
+      margin: 0 auto;
+    }
+    #where {
+      font-size: 130px;
+    }
+    #grad {
+      font-size: 100px;
+      color: red;
+    }
+    #grad:hover {
+      color: white;
+    }
+
+    #fa {
+      background-color: #740102;
+      width: 100%;
+      padding: 30px 20px;
+    }
+
+    .faq {
+      display: grid;
+      grid-template-columns: 30% 70%;
+      width: 90%;
+      margin: 0 auto;
+      padding: 50px 0;
+    }
+
+    .faq-title h2 {
+      font-size: 150px;
+      color: white;
+      font-family: "Russo One", sans-serif;
+      margin: 0;
+    }
+
+    .faq-questions details {
+      border-bottom: 1px solid black;
+      padding: 20px 0;
+      color: white;
+    }
+
+    .faq-questions summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 25px;
+      /*font-weight: bold;*/
+      list-style: none;
+    }
+    .faq-questions summary::-webkit-details-marker {
+      display: none;
+    }
+    .plus {
+      font-size: 35px;
+    }
+    .plus::before {
+      content: "+";
+    }
+    details[open] .plus::before {
+      content: "−";
+    }
+    .faq-questions details p {
+      font-size: 18px;
+      margin: 20px 0 0;
+    }
+
+    .faq-more {
+      margin-top: 30px;
+      color: black;
+    }
+    h2 {
+      text-align: center;
+      color: #740102;
+      padding-top: 30px;
+      padding-bottom: 20px;
+      font-size: 80px;
+    }
+    .table-container {
+      background-color: black;
+      height: 400px;
+    }
+    table {
+      width: 90%;
+      border-collapse: separate;
+      border-spacing: 8px 0;
+      min-width: 600px;
+      background-color: black;
+      color: white;
+      margin: 0 auto;
+    }
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+      font-size: 20px;
+    }
+    thead {
+      background: #740102;
+
+
+    }
+
+    tbody tr:nth-child(even) {
+      background: #111;
+    }
+
+    tbody tr:hover {
+      background: #1c1c1c;
+    }
+    th {
+      color: white;
+      margin: 1px;
+    }
+    tr {
+      background-color: black;
+      color: white;
+    }
+    .time {
+      color: white;
+      font-size: 20px;
+    }
+
+    .pricing {
+      width: 100%;
+      margin: 0 auto;
+      padding: 100px 20px;
+      background-color: #080808;
+      text-align: center;
+      font-family: "Russo One", sans-serif;
+    }
+
+    .pricing h2 {
+      font-size: 64px;
+      color: #ffffff;
+      margin-bottom: 30px;
+      letter-spacing: 2px;
+    }
+
+    .pricing-tabs {
+      display: inline-flex;
+      background: #141414;
+      padding: 6px;
+      border-radius: 50px;
+      gap: 8px;
+      margin-bottom: 60px;
+      border: 1px solid #222;
+    }
+
+    .tab {
+      background: transparent;
+      border: none;
+      padding: 12px 28px;
+      cursor: pointer;
+      color: #888;
+      font-size: 16px;
+      font-family: inherit;
+      border-radius: 40px;
+      transition: all 0.3s ease;
+    }
+
+    .tab:hover {
+      color: #ffffff;
+    }
+
+    .tab.active {
+      background: #740102;
+      color: #ffffff;
+      box-shadow: 0 4px 20px rgba(116, 1, 2, 0.4);
+    }
+
+    .pricing-cards {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .price-card {
+      background: linear-gradient(145deg, #121212, #0a0a0a);
+      padding: 40px 30px;
+      min-height: 320px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+      border: 1px solid #222;
+      width: 280px;
+      border-radius: 16px;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .price-card:hover {
+      transform: translateY(-8px);
+      border-color: #740102;
+      box-shadow: 0 12px 40px rgba(116, 1, 2, 0.2);
+    }
+
+    .price-card h3 {
+      font-size: 24px;
+      margin: 0 0 15px 0;
+      color: #ffffff;
+      letter-spacing: 1px;
+    }
+
+    .price {
+      font-size: 38px;
+      margin: 15px 0;
+      color: #ff3b3d;
+    }
+
+    .info {
+      font-size: 15px;
+      margin: 0;
+      color: #b0b0b0;
+      line-height: 1.5;
+      font-weight: normal;
+    }
+    .phone {
+      transition: transform 0.3s ease;
+      border-radius: 100px;
+      margin-top: 40px;
+    }
+
+
+    .workouts-section {
+      background: black;
+      color: white;
+      padding: 60px 0;
+      /*overflow: hidden; */
+    }
+
+    .workouts-section h2 {
+      font-family: "Russo One", sans-serif;
+      color: #740102;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .workout-slider {
+      position: relative;
+      width: 1000px;
+      max-width: 90%;
+      margin: 0 auto;
+      padding: 0 60px;
+      box-sizing: border-box;
+    }
+    .slider-viewport {
+      width: 100%;
+      overflow: hidden;
+    }
+    .workout-track {
+      display: flex;
+      gap: 30px;
+      transition: transform 0.5s ease;
+    }
+
+    .workout-card {
+      flex: 0 0 100%;
+      padding: 50px 40px;
+      background: dimgray;
+      /*text-align: center;*/
+      border: 10px solid #740102;
+      box-sizing: border-box;
+      border-radius: 8px;
+    }
+    .workout-card h3 {
+      font-family: "Russo One", sans-serif;
+      color: white;
+      /*margin-bottom: 20px;*/
+      font-size: 28px;
+    }
+
+    .workout-card p {
+      font-family: Arial, sans-serif;
+      font-size: 20px;
+      line-height: 1.6;
+      /*margin: 0 auto;*/
+    }
+    .slider-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      width: 45px;
+      height: 45px;
+      border: 2px solid #740102;
+      background: black;
+      color: #740102;
+      font-size: 22px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .slider-arrow:hover {
+      background: #740102;
+      color: white;
+    }
+
+    .prev {
+      left: 0px;
+    }
+
+    .next {
+      right: 0px;
+    }
+
+    @keyframes bounceMovement {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+    .besplatno {
+      display: inline-block;
+      animation: bounceMovement 1s ease infinite;
+      color: white;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="language-bar">
+  <button type="button" onclick="changeLanguage('mk')">MK</button>
+  <span>|</span>
+  <button type="button" onclick="changeLanguage('en')">EN</button>
+</div>
+
+<nav class="navbar navbar-expand-lg">
+
+  <div class="container-fluid">
+    <a class="navbar-brand" href="home.html">
+      <img src="images/logo_top.png" alt="Logo">
+    </a>
+
+    <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarMenu"
+            aria-controls="navbarMenu"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarMenu">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="workouts.html">Workouts</a>
+        </li>
+
+        <li class="nav-item cities-dropdown">
+          <a class="nav-link cities-link" href="#">Cities</a>
+          <ul class="custom-menu">
+            <li>
+              <a href="Skopje.html">Skopje</a>
+            </li>
+
+            <li>
+              <a href="Ohrid.html">Ohrid</a>
+            </li>
+
+            <li>
+              <a href="Bitola.html">Bitola</a>
+            </li>
+
+            <li>
+              <a href="Tetovo.html">Tetovo</a>
+            </li>
+
+          </ul>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+
+</nav>
+
+<section class="city">
+  <img src="images/bi.jpg" alt="Bitola">
+  <div class="city-name">BITOLA</div>
+</section>
+
+<section class="booking" id="booking">
+  <div class="info">
+    <h1 id="title">BOOK YOUR <strong class="besplatno">FREE</strong> TRIAL LESSON</h1>
+    <div class="steps">
+      <p><strong>1.</strong>Fill out the form.</p>
+      <p><strong>2.</strong>You will receive an automatic email with all the details.</p>
+      <p><strong>3.</strong>We will call you to confirm the time of your trial lesson or to propose a new time if there are no available places.</p>
+      <p><strong>4.</strong>We'll be available via WhatsApp, email, or phone for any questions.</p>
+      <p><strong>5.</strong>We'll remind you of your class 24 hours in advance, so you don't forget anything.</p>
+    </div>
+
+  </div>
+
+  <div class="form-container">
+
+    <form class="form">
+      <div class="form-group">
+        <p>Full Name</p>
+        <label for="first-name">First Name</label>
+        <input
+                type="text"
+                id="first-name"
+                name="first-name"
+                placeholder="John"
+                required>
+        <label for="last-name">Last Name</label>
+        <input
+                type="text"
+                id="last-name"
+                name="first-name"
+                placeholder="Doe"
+                required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+
+        <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="john@company.com"
+                required>
+      </div>
+
+      <div class="form-group">
+        <label for="telephone">Telephone</label>
+
+        <input
+                type="tel"
+                id="telephone"
+                name="telephone"
+                placeholder="+389"
+                required>
+      </div>
+
+      <div class="form-group">
+        <label for="experience">Level of Experience</label>
+
+        <select id="experience" name="experience" required>
+          <option value="">Select one</option>
+          <option value="without-experience">
+            Without experience
+          </option>
+          <option value="a little experience">
+            Have done CrossFit a couple of times
+          </option>
+          <option value="3-months">
+            Have months of experience doing Crossfit
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="trial-date">Trial Day </label>
+
+        <input
+                type="date"
+                id="trial-date"
+                name="trial-date"
+                required>
+      </div>
+
+      <div class="form-group">
+        <label for="class-hour">Class Hour </label>
+        <select id="class-hour" name="class-hour" required>
+          <option value="">Select a timetable</option>
+          <option value="10:00">10:00 AM</option>
+          <option value="14:15">2:15 PM</option>
+          <option value="17:15">5:15 PM</option>
+          <option value="18:15">6:15 PM</option>
+          <option value="19:15">7:15 PM</option>
+        </select>
+        <small>If none of the hours suit you, we will look for the best one to suit your needs.</small>
+      </div>
+
+      <div class="privacy-check">
+        <input
+                type="checkbox"
+                id="privacy"
+                name="privacy"
+                required>
+        <label for="privacy">I read and accept the <a href="#" target="_blank">privacy policy</a>.</label>
+      </div>
+
+      <button type="submit">RESERVE</button>
+
+    </form>
+
+  </div>
+
+</section>
+
+<div class="map-container">
+  <h1 id="where">WHERE WE ARE</h1>
+  <h1 id="grad">BITOLA</h1>
+  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d25428.00611601408!2d21.307942958452127!3d41.02583358485024!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x13572451365fb6fd%3A0xfa67bbbf65bec948!2sBitola!5e1!3m2!1sen!2smk!4v1787051882561!5m2!1sen!2smk" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</div>
+
+
+<div id="fa">
+  <section class="faq">
+    <div class="faq-title">
+      <h2>FAQs</h2>
+    </div>
+    <div class="faq-questions">
+      <details>
+        <summary>
+          <span>Is it for me?</span><span class="plus"></span>
+        </summary>
+        <p>Our classes are suitable for beginners and experienced athletes. We will help you find the right level for you.</p>
+      </details>
+
+      <details>
+        <summary>
+          <span>What can I expect?</span><span class="plus"></span>
+        </summary>
+        <p>You can expect a welcoming environment, professional coaching, and workouts adapted to your level.</p>
+      </details>
+
+      <details>
+        <summary>
+          <span>What is a lesson like?</span><span class="plus"></span>
+        </summary>
+        <p>Each lesson includes a warm-up, instruction, the main workout, and a cool-down.</p>
+      </details>
+
+      <details>
+        <summary>
+          <span>Can I train with an injury?</span><span class="plus"></span>
+        </summary>
+        <p>Please speak with your coach before training so we can determine whether exercises can safely be adapted.</p>
+      </details>
+
+
+    </div>
+  </section>
+</div>
+
+
+<section class="pricing">
+
+  <h2>PRICING</h2>
+  <div class="pricing-tabs">
+    <button class="tab active" data-plan="monthly">Monthly</button>
+    <button class="tab" data-plan="semiannual">Semiannual</button>
+    <button class="tab" data-plan="annual">Annual</button>
+  </div>
+  <div class="pricing-cards" id="pricing-cards">
+  </div>
+</section>
+
+<div class="table-container">
+  <h2>Weekly Gym Timetable</h2>
+  <table>
+    <thead>
+    <tr>
+      <th>Time</th>
+      <th>Monday</th>
+      <th>Tuesday</th>
+      <th>Wednesday</th>
+      <th>Thursday</th>
+      <th>Friday</th>
+      <th>Saturday</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td class="time">09:00</td>
+      <td><span class="class-name">Hybrid</span></td>
+      <td><span class="class-name">HIIT</span></td>
+      <td><span class="class-name">Hybrid</span></td>
+      <td><span class="class-name">HIIT</span></td>
+      <td><span class="class-name">Hybrid</span></td>
+      <td><span class="class-name">Zumba</span></td>
+    </tr>
+    <tr>
+      <td class="time">12:00</td>
+      <td><span class="class-name">Yoga</span></td>
+      <td><span class="class-name">Strength</span></td>
+      <td><span class="class-name">Yoga</span></td>
+      <td><span class="class-name">Strength</span></td>
+      <td><span class="class-name">Core</span></td>
+      <td><span class="class-name">Hyrox</span></td>
+    </tr>
+    <tr>
+      <td class="time">18:00</td>
+      <td><span class="class-name">CrossFit</span></td>
+      <td><span class="class-name">Hyrox</span></td>
+      <td><span class="class-name">CrossFit</span></td>
+      <td><span class="class-name">Hyrox</span></td>
+      <td><span class="class-name">Boxing</span></td>
+      <td>-</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<section class="workouts-section">
+
+  <h2>THE CLASSES</h2>
+  <div class="workout-slider">
+    <button class="slider-arrow prev" onclick="previousWorkout()"> ← </button>
+    <div class="slider-viewport">
+      <div class="workout-track">
+
+        <div class="workout-card active">
+          <h3>HYBRID</h3>
+          <p>Experience level:</p><p><strong>ALL FITNESS LEVELS</strong></p><p>Duration:</p><p><strong>1H</strong></p>
+          <p>
+            Hybrid training combines different forms of
+            exercise to develop strength, endurance and
+            overall athletic performance.
+          </p>
+        </div>
+        <div class="workout-card">
+          <h3>YOGA</h3>
+          <p>Experience level:</p><p><strong>ALL FITNESS LEVELS</strong></p><p>Duration:</p><p><strong>1H</strong></p>
+          <p>
+            Yoga focuses on mobility, flexibility, balance
+            and controlled movement.
+          </p>
+        </div>
+        <div class="workout-card">
+          <h3>CROSSFIT</h3>
+          <p>Experience level: </p><p><strong>ADVANCED LEVEL</strong></p><p>Duration: </p><p><strong>1H</strong></p>
+          <p>
+            A mix of gymnastics,weightlifting and metabolic work.
+            Perfect if you're looking for total performance and explosive strength.
+          </p>
+        </div>
+        <div class="workout-card">
+          <h3>BOXING</h3>
+          <p>Experience level:</p><p><strong>ADVANCED LEVEL</strong></p><p>Duration:</p><p><strong>1H</strong></p>
+          <p>
+            Boxing is a full-body workout that combines strength, endurance, coordination and technique.
+            It is suitable for improving fitness while learning the fundamentals of boxing.
+          </p>
+        </div>
+      </div>
+      <button class="slider-arrow next" onclick="nextWorkout()">→</button>
+    </div>
+  </div>
+
+</section>
+<footer class="mt-auto text-white"
+        style="background: linear-gradient(135deg, #180000 0%, #4a0000 50%, #050505 100%);">
+
+  <div class="py-5">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
+
+      <div>
+        <h4 class="mb-1">Ready to get started?</h4>
+        <p class="mb-0 opacity-75">
+          Start your fitness journey today with Mega Gym.
+        </p>
+      </div>
+
+
+      <a href="http://localhost:63342/DP-project/DP-project/Bitola.html#booking" class="btn btn-light btn-lg flex-shrink-0">
+        Join us now
+      </a>
+
+    </div>
+  </div>
+
+  <div class="py-3 border-top border-secondary">
+    <div class="container d-flex justify-content-between small text-white-50">
+
+      <span>&copy; 2026 Mega Gym</span>
+
+      <div class="d-flex gap-3">
+        <a class="text-white-50 text-decoration-none" href="">Workouts</a>
+        <a class="text-white-50 text-decoration-none" href="">Cities</a>
+        <a class="text-white-50 text-decoration-none" href="">Contact</a>
+
+      </div>
+
+    </div>
+  </div>
+
+</footer>
+
+<script>
+  const pricing = {
+
+    monthly: [
+      {
+        name: "Unlimited",
+        price: "€90/month",
+        info: ""
+      },
+
+      {
+        name: "12 classes/month",
+        price: "€80/month",
+        info: ""
+      },
+
+      {
+        name: "9 classes/month",
+        price: "€70/month",
+        info: ""
+      }
+    ],
+    semiannual: [
+      {
+        name: "Unlimited",
+        price: "€80/month",
+        info: "€500"
+      }
+    ],
+    annual: [
+      {
+        name: "Unlimited",
+        price: "€75/month",
+        info: "€900"
+      }
+    ]
+
+  };
+
+  const tabs = document.querySelectorAll(".tab");
+  const pricingCards = document.getElementById("pricing-cards");
+
+  function showPrices(plan) {
+
+    pricingCards.innerHTML = "";
+    pricing[plan].forEach(item => {
+      const card = document.createElement("div");
+      card.classList.add("price-card");
+      card.innerHTML = `<h3>${item.name}</h3> <p class="price">${item.price}</p><p class="info">${item.info}</p>`;
+      pricingCards.appendChild(card);
+
+    });
+
+  }
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      tabs.forEach(t => {
+        t.classList.remove("active");
+      });
+      tab.classList.add("active");
+      const plan = tab.dataset.plan;
+      showPrices(plan);
+    });
+
+  })
+  showPrices("monthly");
+</script>
+<script>
+  let currentWorkout = 0;
+
+  const workoutCards = document.querySelectorAll(".workout-card");
+  const workoutTrack = document.querySelector(".workout-track");
+
+  function showWorkout(index) {
+
+    if (index < 0) {
+      index = workoutCards.length - 1;
+    }
+
+    if (index >= workoutCards.length) {
+      index = 0;
+    }
+
+    currentWorkout = index;
+
+    const cardWidth =
+            workoutCards[0].offsetWidth + 30;
+
+    workoutTrack.style.transform =
+            `translateX(-${currentWorkout * cardWidth}px)`;
+  }
+
+  function nextWorkout() {
+    showWorkout(currentWorkout + 1);
+  }
+
+  function previousWorkout() {
+    showWorkout(currentWorkout - 1);
+  }
+  workoutCards.forEach((card, index) => {
+
+    card.addEventListener("click", function() {
+
+      if (index !== currentWorkout) {
+        showWorkout(index);
+      }
+
+    });
+
+  });
+</script>
+<script>
+  const pageTranslations = {
+    "Workouts":"Тренинзи", "Cities":"Градови", "Skopje":"Скопје", "Ohrid":"Охрид", "Bitola":"Битола", "Tetovo":"Тетово", "BITOLA":"БИТОЛА",
+    "BOOK YOUR":"РЕЗЕРВИРАЈТЕ ГО ВАШИОТ", "FREE":"БЕСПЛАТЕН", "TRIAL LESSON":"ПРОБЕН ТРЕНИНГ", "Fill out the form.":"Пополнете го формуларот.",
+    "You will receive an automatic email with all the details.":"Ќе добиете автоматска е-пошта со сите детали.",
+    "We will call you to confirm the time of your trial lesson or to propose a new time if there are no available places.":"Ќе ви се јавиме за да го потврдиме времето на пробниот тренинг или да предложиме нов термин ако нема слободни места.",
+    "We'll be available via WhatsApp, email, or phone for any questions.":"За сите прашања, достапни сме преку WhatsApp, е-пошта или телефон.",
+    "We'll remind you of your class 24 hours in advance, so you don't forget anything.":"Ќе ве потсетиме за тренингот 24 часа однапред за да не заборавите ништо.",
+    "Full Name":"Име и презиме", "First Name":"Име", "Last Name":"Презиме", "Email":"Е-пошта", "Telephone":"Телефон", "Level of Experience":"Ниво на искуство", "Select one":"Изберете", "Without experience":"Без искуство", "Have done CrossFit a couple of times":"Сум вежбал/а CrossFit неколку пати", "Have months of experience doing Crossfit":"Имам неколку месеци искуство со CrossFit", "Trial Day":"Ден за пробен тренинг", "Class Hour":"Време на тренинг", "Select a timetable":"Изберете термин", "If none of the hours suit you, we will look for the best one to suit your needs.":"Ако ниту еден термин не ви одговара, ќе го најдеме најсоодветниот за вас.", "I read and accept the":"Прочитав и се согласувам со", "privacy policy":"политиката за приватност", "RESERVE":"РЕЗЕРВИРАЈ",
+    "WHERE WE ARE":"КАДЕ СЕ НАОЃАМЕ", "FAQs":"ЧПП", "Is it for me?":"Дали е ова за мене?", "Our classes are suitable for beginners and experienced athletes. We will help you find the right level for you.":"Нашите тренинзи се соодветни за почетници и искусни спортисти. Ќе ви помогнеме да го најдете вистинското ниво за вас.", "What can I expect?":"Што можам да очекувам?", "You can expect a welcoming environment, professional coaching, and workouts adapted to your level.":"Очекувајте пријатна атмосфера, професионално водство и тренинзи приспособени на вашето ниво.", "What is a lesson like?":"Како изгледа тренингот?", "Each lesson includes a warm-up, instruction, the main workout, and a cool-down.":"Секој тренинг вклучува загревање, упатства, главен дел и завршно опуштање.", "Can I train with an injury?":"Можам ли да тренирам ако имам повреда?", "Please speak with your coach before training so we can determine whether exercises can safely be adapted.":"Разговарајте со тренерот пред тренинг за да утврдиме дали вежбите може безбедно да се приспособат.", "Want to know more?":"Сакате да дознаете повеќе?", "PRICING":"ЦЕНИ", "Monthly":"Месечно", "Semiannual":"На шест месеци", "Annual":"Годишно", "Unlimited":"Неограничено", "12 classes/month":"12 тренинзи месечно", "9 classes/month":"9 тренинзи месечно",
+    "Weekly Gym Timetable":"Неделен распоред на тренинзи", "Time":"Време", "Monday":"Понеделник", "Tuesday":"Вторник", "Wednesday":"Среда", "Thursday":"Четврток", "Friday":"Петок", "Saturday":"Сабота", "THE CLASSES":"ТРЕНИНЗИ", "Experience level:":"Ниво на искуство:", "ALL FITNESS LEVELS":"ЗА СИТЕ НИВОА", "Duration:":"Времетраење:", "ADVANCED LEVEL":"НАПРЕДНО НИВО",
+    "Hybrid training combines different forms of exercise to develop strength, endurance and overall athletic performance.":"Хибридниот тренинг комбинира различни видови вежби за развој на силата, издржливоста и севкупните спортски перформанси.", "Yoga focuses on mobility, flexibility, balance and controlled movement.":"Јогата се фокусира на подвижноста, флексибилноста, рамнотежата и контролираното движење.", "A mix of gymnastics,weightlifting and metabolic work. Perfect if you're looking for total performance and explosive strength.":"Комбинација од гимнастика, кревање тегови и метаболички вежби. Одличен избор за севкупни перформанси и експлозивна сила.", "Boxing is a full-body workout that combines strength, endurance, coordination and technique. It is suitable for improving fitness while learning the fundamentals of boxing.":"Боксот е тренинг за целото тело кој ги комбинира силата, издржливоста, координацијата и техниката. Помага да ја подобрите кондицијата и да ги научите основите на боксот.",
+    "Ready to get started?":"Подготвени сте да започнете?", "Start your fitness journey today with Mega Gym.":"Започнете го вашето фитнес-патување денес со Mega Gym.", "Join us now":"Придружете ни се", "Contact":"Контакт", "Title":"Битола"
+  };
+
+  const originalText = new WeakMap();
+  let pageLanguage = 'en';
+
+  function changeLanguage(language) {
+    pageLanguage = language;
+    document.documentElement.lang = language;
+
+    const walker = document.createTreeWalker(
+            document.body,
+            NodeFilter.SHOW_TEXT
+    );
+
+    let node;
+
+    while (node = walker.nextNode()) {
+      if (['SCRIPT', 'STYLE'].includes(node.parentElement?.tagName)) {
+        continue;
+      }
+
+      if (!originalText.has(node)) {
+        originalText.set(node, node.nodeValue);
+      }
+
+      const original = originalText.get(node);
+      const key = original.trim().replace(/\s+/g, ' ');
+
+      if (language === 'mk') {
+        node.nodeValue = original.replace(
+                original.trim(),
+                pageTranslations[key] || original.trim()
+        );
+      } else {
+        node.nodeValue = original;
+      }
+    }
+
+    document.querySelectorAll('[placeholder]').forEach(input => {
+      if (!input.dataset.originalPlaceholder) {
+        input.dataset.originalPlaceholder = input.placeholder;
+      }
+
+      const original = input.dataset.originalPlaceholder;
+
+      input.placeholder = language === 'mk'
+              ? ({ John: 'Јован', Doe: 'Петров' }[original] || original)
+              : original;
+    });
+
+    document.title = language === 'mk'
+            ? 'Битола | Mega Gym'
+            : 'Bitola | Mega Gym';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    changeLanguage('en');
+
+    const cards = document.getElementById('pricing-cards');
+
+    if (cards) {
+      new MutationObserver(() => changeLanguage(pageLanguage))
+              .observe(cards, {
+                childList: true,
+                subtree: true
+              });
+    }
+  });
+
+</script>
+</body>
+</html>

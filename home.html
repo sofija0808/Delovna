@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>MEGA GYM</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            visibility: hidden;
+            opacity: 0;
+            z-index: 1000;
+
+            transition: 0.4s;
+        }
+
+        .popup:target {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .popup-inner {
+            position: relative;
+
+            display: flex;
+
+            width: 70%;
+            max-width: 900px;
+            height: 500px;
+
+            background: white;
+
+            transform: scale(0.8);
+            transition: 0.4s;
+        }
+
+        .popup:target .popup-inner {
+            transform: scale(1);
+        }
+
+        .popup__photo {
+            width: 40%;
+            overflow: hidden;
+        }
+
+        .popup__photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .popup__text {
+            width: 60%;
+            padding: 50px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .popup__text span {
+            color: #740102;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .popup__text h1 {
+            font-size: 32px;
+            margin-bottom: 25px;
+            color: #111;
+        }
+
+        .popup__text p {
+            font-size: 12px;
+            line-height: 1.7;
+            color: #666;
+            font-family: Arial, sans-serif;
+        }
+
+        .popup__close {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+
+            width: 40px;
+            height: 40px;
+
+            background: #740102;
+            color: white;
+
+            border-radius: 50%;
+
+            text-decoration: none;
+            text-align: center;
+            line-height: 40px;
+
+            font-weight: bold;
+        }
+
+        body { padding-top: 185px !important; }
+        .language-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1100;
+            width: 100%;
+            height: 35px;
+            background: #000;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding-right: 30px;
+            gap: 8px;
+        }
+        .navbar { top: 35px !important; }
+        .navbar { position: fixed !important; top: 35px !important; left: 0; z-index: 1000; width: 100%; height: 150px !important; }
+        .hero { margin-top: 0 !important; padding-top: 0 !important; }
+        .hero > img { display: block; }
+        @media (max-width: 991.98px) {
+            body { padding-top: 145px !important; }
+            .navbar { height: 110px; }
+            .navbar { height: 110px !important; }
+            .navbar-collapse { top: 110px; }
+        }
+
+        .language-bar button {
+            background: none;
+            border: none;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .language-bar button:hover {
+            color: #740102;
+        }
+
+        .language-bar span {
+            color: white;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<script>
+    const translations = {
+        "Workouts":"Тренинзи", "Cities":"Градови", "Skopje":"Скопје", "Ohrid":"Охрид", "Bitola":"Битола", "Tetovo":"Тетово",
+        "About us":"За нас", "Group Training":"Групни тренинзи", "Best Coaches":"Најдобри тренери", " Best Coaches ":"Најдобри тренери",
+        "Classes Every Day":"Часови секој ден", " Classes Every Day":"Часови секој ден", "4 Cities":"4 градови", "Our Workouts":"Нашите тренинзи",
+        "Workout":"Тренинг", "Boxing":"Бокс", "Running":"Трчање", "Fitness":"Фитнес", "Yoga":"Јога", "FAQs":"ЧПП",
+        "Is it for me?":"Дали е ова за мене?", "Our classes are suitable for beginners and experienced athletes. We will help you find the right level for you.":"Нашите часови се соодветни и за почетници и за искусни спортисти. Ќе ви помогнеме да го најдете вистинското ниво.",
+        "What can I expect?":"Што можам да очекувам?", "You can expect a welcoming environment, professional coaching, and workouts adapted to your level.":"Очекувајте пријатна средина, професионално водство и тренинзи приспособени на вашето ниво.",
+        "What is a lesson like?":"Како изгледа еден час?", "Each lesson includes a warm-up, instruction, the main workout, and a cool-down.":"Секој час вклучува загревање, инструкции, главен тренинг и разладување.",
+        "Can I train with an injury?":"Може ли да тренирам со повреда?", "Please speak with your coach before training so we can determine whether exercises can safely be adapted.":"Разговарајте со тренерот пред тренингот за да утврдиме дали вежбите може безбедно да се приспособат.",
+        "Want to know more?":"Сакате да дознаете повеќе?", "Meet the team":"Запознајте го тимот", "Life Coach & Personal Trainer":"Животен и личен тренер",
+        "Senior Fitness Coach":"Главен фитнес тренер", "Running Coach":"Тренер по трчање", "Boxing Instructor":"Инструктор по бокс", "Yoga Instructor":"Инструктор по јога",
+        "CrossFit Instructor":"CrossFit инструктор", "Full-Body Workout Instructor":"Инструктор за тренинг на цело тело", "Nutritionist":"Нутриционист", "Medical Expert":"Медицински експерт",
+        "This is mega":"Ова е Mega", "Guaranteed Results":"Гарантирани резултати", "Personalized Training":"Персонализиран тренинг", "Workout Club":"Фитнес клуб",
+        "our clubs":"Нашите клубови", "pay for one, use them all":"Платете за еден, користете ги сите", "Train, recover, and stay active at our location in the heart of Skopje.":"Тренирајте, одморете се и останете активни во нашата локација во срцето на Скопје.",
+        "Enjoy your fitness journey surrounded by the beautiful scenery of Ohrid.":"Уживајте во фитнес-патувањето опкружени со прекрасната природа на Охрид.", "Stay strong and motivated with professional training in Bitola.":"Останете силни и мотивирани со професионални тренинзи во Битола.",
+        "Reach your fitness goals with our modern training facilities in Tetovo.":"Остварете ги фитнес-целите во нашите современи сали во Тетово.", "See More":"Повеќе", "LATEST NEWS":"НАЈНОВИ ВЕСТИ", "READ MORE":"ПРОЧИТАЈ ПОВЕЌЕ",
+        "What our ":"Што велат нашите ", "What our":"Што велат нашите", "members say":"членови", "Gym Member":"Член на клубот", "If you have any other questions, we're right behind this phone number.":"Ако имате дополнителни прашања, јавете ни се на овој број.",
+        "TEXT US":"ПИШЕТЕ НИ","Where Tradition ":"Каде традицијата ","Meets Performance":"се среќава со врвните перформанси",
+        "Build strength, improve your endurance, and challenge yourself with workouts designed to help you become stronger, healthier, and more confident.":"Изградете сила, подобрете ја издржливоста и предизвикајте се со тренинзи што ќе ви помогнат да станете посилни, поздрави и посамоуверени.",
+        "Develop your speed, power, coordination, and technique while building confidence through dynamic and challenging boxing training.":"Развивајте брзина, сила, координација и техника и стекнете самодоверба преку динамични и предизвикувачки боксерски тренинзи.",
+        "Improve your stamina, endurance, and overall fitness with running sessions designed to keep you moving, motivated, and ready to reach your goals.":"Подобрете ја кондицијата и издржливоста со тренинзи по трчање што ќе ве одржуваат активни, мотивирани и подготвени да ги остварите целите.",
+        "Take your fitness to the next level with exercises that improve your strength, endurance, mobility, and overall physical performance.":"Подигнете ја кондицијата на повисоко ниво со вежби за сила, издржливост, подвижност и севкупни физички перформанси.",
+        "Improve your flexibility, balance, strength, and focus while relaxing your body and mind through a combination of controlled movements and breathing.":"Подобрете ја флексибилноста, рамнотежата, силата и концентрацијата и опуштете ги телото и умот со контролирани движења и дишење.",
+        "Helping members build confidence, healthy habits, and a stronger mindset.":"Им помага на членовите да изградат самодоверба, здрави навики и посилен начин на размислување.",
+        "Bringing years of experience in strength training, fitness, and personal coaching.":"Со долгогодишно искуство во тренинг за сила, фитнес и индивидуално тренерство.",
+        "Specializing in endurance, running technique, and helping athletes become stronger and faster.":"Специјализирана за издржливост и техника на трчање, со цел спортистите да станат посилни и побрзи.",
+        "Focused on boxing technique, conditioning, discipline, and confidence.":"Фокусиран на боксерска техника, кондиција, дисциплина и самодоверба.",
+        "Helping members improve flexibility, balance, breathing, and mind-body connection.":"Им помага на членовите да ја подобрат флексибилноста, рамнотежата, дишењето и поврзаноста на телото и умот.",
+        "Specializing in functional movements, strength, endurance, and high-intensity workouts.":"Специјализиран за функционални движења, сила, издржливост и високоинтензивни тренинзи.",
+        "Creating dynamic workouts focused on strength, endurance, and overall fitness.":"Креира динамични тренинзи насочени кон силата, издржливоста и општата кондиција.",
+        "Focused on endurance training, boxing technique, and helping runners reach their full potential.":"Фокусиран на тренинг за издржливост и боксерска техника, како и на помагање на тркачите да го достигнат својот целосен потенцијал.",
+        "Creating personalized nutrition plans to support fitness goals, energy, recovery, and a healthy lifestyle.":"Креира персонализирани планови за исхрана што ги поддржуваат фитнес-целите, енергијата, закрепнувањето и здравиот начин на живот.",
+        "Providing professional guidance on safe training, recovery, and maintaining a healthy body.":"Дава стручни насоки за безбеден тренинг, закрепнување и одржување на здраво тело.",
+        "At MEGA, we believe that consistency creates results. Our workouts are designed to help you become stronger, fitter, and more confident. Show up, put in the work, and stay committed — the results will follow. No shortcuts, no empty promises, just real progress.":"Во MEGA веруваме дека доследноста носи резултати. Нашите тренинзи ви помагаат да станете посилни, покондиционирани и посамоуверени. Доаѓајте редовно, вложувајте труд и истрајте — резултатите ќе следат. Без кратенки и празни ветувања, само вистински напредок.",
+        "Training that works for you. Everyone has different goals, fitness levels, and ways of training. Our coaches are here to help you find what works best for you and push you to improve at your own pace. Whether you're a beginner or experienced athlete, there is always a place for you at MEGA.":"Тренинг приспособен за вас. Секој има различни цели, ниво на кондиција и начин на вежбање. Нашите тренери ќе ви помогнат да го најдете она што најмногу ви одговара и да напредувате со свое темпо. Во MEGA има место за сите, и за почетници и за искусни спортисти.",
+        "More ways to train. More ways to move. MEGA is a modern, multidisciplinary Workout Club where you can choose how you want to train. From strength and fitness to boxing, running, and yoga — explore different workouts, challenge yourself, and find what you enjoy. Because training should be effective, challenging, and something you look forward to.":"Повеќе начини за тренинг и движење. MEGA е современ клуб со разновидни активности каде што сами избирате како ќе вежбате. Од тренинг за сила и фитнес до бокс, трчање и јога — испробајте различни активности, предизвикајте се и најдете го она во што уживате. Тренингот треба да биде ефикасен, предизвикувачки и нешто на што со нетрпение му се радувате.",
+        "Address: Partizanska 15, Skopje":"Адреса: Партизанска 15, Скопје", "Address: Kej Makedonija 25, Ohrid":"Адреса: Кеј Македонија 25, Охрид", "Address: Shirok Sokak 42, Bitola":"Адреса: Широк Сокак 42, Битола", "Address: Ilindenska 18, Tetovo":"Адреса: Илинденска 18, Тетово",
+        "Real experiences from people who train with us every day.":"Искуства од луѓе кои тренираат со нас секој ден.",
+        "I love the atmosphere here. The trainers are supportive, the equipment is great, and I always feel motivated to come back.":"Ја обожавам атмосферата тука. Тренерите се секогаш поддршка, опремата е одлична и секогаш сум мотивиран/а да се вратам.",
+        "Since I started training here, I have noticed a big difference. I feel stronger, healthier, and much more confident.":"Откако почнав да тренирам тука, забележувам голема разлика. Се чувствувам посилно, поздраво и многу посамоуверено.",
+        "Great gym with a friendly atmosphere. The workouts are challenging and the trainers always help you push yourself further.":"Одлична сала со пријателска атмосфера. Тренинзите се предизвикувачки, а тренерите секогаш ве поттикнуваат да дадете повеќе.",
+        "August 25th, 2026":"25 август 2026", "August 17th, 2026":"17 август 2026", "August 4th, 2026":"4 август 2026", "July 23rd, 2026":"23 јули 2026", "July 17th, 2026":"17 јули 2026",
+        "How Much Protein Do You Need to Build Muscle?":"Колку протеини ви се потребни за да изградите мускули?", "Personal Trainer or Fitness Coach? How to Choose the Right Pro for Your Goals":"Личен тренер или фитнес тренер? Како да го изберете вистинскиот стручњак за вашите цели", "Is a Gym Membership Worth It?":"Дали членството во теретана вреди?",
+        "A gym membership can be much more than simply having access to exercise equipment. Having a dedicated place to train can help you create a routine, stay motivated and make fitness a regular part of your lifestyle. At Mega Gym, members can choose from different types of training depending on their interests, fitness level and personal goals. Whether you want to build strength, improve your endurance, lose weight, become more active or simply feel healthier, having access to professional equipment and experienced coaches can make the process easier. Another important benefit of training at a gym is the environment. Being surrounded by other people who are working toward their own goals can give you extra motivation on days when you do not feel like training. Ultimately, a gym membership is an investment in your health, confidence and long-term wellbeing.":"Членството во теретана може да значи многу повеќе од пристап до опрема за вежбање. Посебно место за тренинг може да ви помогне да создадете рутина, да останете мотивирани и фитнесот да стане редовен дел од вашиот начин на живот. Во Mega Gym членовите можат да избираат различни видови тренинг според своите интереси, нивото на кондиција и личните цели. Без разлика дали сакате да ја зголемите силата, да ја подобрите издржливоста, да ослабете, да бидете поактивни или едноставно да се чувствувате поздраво, професионалната опрема и искусните тренери можат да го олеснат процесот. Друга важна предност на тренирањето во теретана е атмосферата. Опкруженоста со луѓе кои работат на сопствените цели може дополнително да ве мотивира во деновите кога не ви се тренира. На крајот, членството во теретана е вложување во вашето здравје, самодоверба и долгорочна благосостојба.", "Is a Gym Membership Worth It? Why Joining Mega Gym Pays Off":"Дали членството во теретана вреди? Зошто Mega Gym е добар избор", "How to Start Going to the Gym: Step-by-Step Guide for Beginners":"Како да почнете да одите во теретана: водич за почетници чекор по чекор", "Fitness Trends 2026: What’s Next in Wellness, Tech & Training":"Фитнес трендови во 2026: новости во здравјето, технологијата и тренингот", "Ready to get started?":"Подготвени сте да започнете?", "Start your fitness journey today with Mega Gym.":"Започнете го вашето фитнес-патување денес со Mega Gym.", "Join us now":"Придружете ни се", "Elena Stojanovska":"Елена Стојановска", "Goran Petrovski":"Горан Петровски", "Marija Nikolovska":"Марија Николовска", "Viktor Trajkov":"Виктор Трајков", "Ana Ilievska":"Ана Илиевска", "Filip Georgiev":"Филип Георгиев", "Stefan Stojanov":"Стефан Стојанов", "Ivan Ristovski":"Иван Ристовски", "Elena Petrova":"Елена Петрова", "Nikola Milevski":"Никола Милевски", "Aleksandar Petrovski":"Александар Петровски", "David Nikolov":"Давид Николов", "We’re more than just a gym — we’re a community built on strength, discipline, and progress. Whether you’re just starting or pushing your limits, we’re here to help you become stronger, healthier, and more confident.":"Ние сме повеќе од обична теретана — ние сме заедница изградена врз сила, дисциплина и напредок. Без разлика дали штотуку почнувате или ги поместувате сопствените граници, тука сме да ви помогнеме да станете посилни, поздрави и посамоуверени.","Personal Trainer or Fitness Coach? How to Choose the Right Pro for Your Goals":"Личен тренер или фитнес тренер? Како да го изберете вистинскиот стручњак за вашите цели",
+        "Choosing the right fitness professional can make a big difference in your training experience. A personal trainer usually focuses on creating structured workouts, teaching proper exercise technique and helping you safely progress toward specific fitness goals. A fitness coach may take a broader approach by focusing on motivation, consistency, habits and your overall lifestyle. If you are new to the gym and are not sure how to perform exercises correctly, working with a personal trainer can give you the confidence and knowledge you need to get started. If you already understand the basics of training but have trouble staying consistent, a coach may be able to help you build better habits. Before choosing someone, think about your goals, experience and the type of support you need. The right professional should help you feel motivated, comfortable and confident during your fitness journey.":"Изборот на соодветен фитнес-стручњак може значително да го подобри вашето искуство со тренингот. Личниот тренер обично креира структуриран тренинг-план, ве учи на правилна техника и ви помага безбедно да напредувате кон конкретните фитнес-цели. Фитнес тренерот може да има поширок пристап, со фокус на мотивацијата, доследноста, навиките и целокупниот начин на живот. Ако сте нови во теретана и не сте сигурни како правилно да ги изведувате вежбите, личниот тренер може да ви ги даде самодовербата и знаењето потребни за да почнете. Ако веќе ги знаете основите на тренингот, но тешко ви оди доследноста, тренерот може да ви помогне да изградите подобри навики. Пред да изберете, размислете за вашите цели, искуството и видот поддршка што ви е потребна. Вистинскиот стручњак треба да ви помогне да се чувствувате мотивирано, удобно и самоуверено во текот на фитнес-патувањето.",
+        "Protein plays an important role in building, repairing and maintaining muscle. When you train, especially during strength workouts, your muscles need enough nutrients to recover and adapt. Getting enough protein throughout the day can support this process and help you make better progress over time. Good protein sources include chicken, eggs, fish, Greek yogurt, cottage cheese, beans, lentils and other protein-rich foods. It is also helpful to spread your protein intake across your meals instead of relying on one large meal. However, protein is only one part of the equation. Consistent training, enough calories, quality sleep, hydration and proper recovery are all important for building muscle. The best approach is to create a balanced routine that you can maintain consistently rather than focusing on one single nutrient.":"Протеините имаат важна улога во градењето, обновувањето и одржувањето на мускулите. Кога тренирате, особено со вежби за сила, на мускулите им се потребни доволно хранливи материи за да закрепнат и да се приспособат. Доволниот внес на протеини во текот на денот го поддржува овој процес и може да ви помогне да напредувате. Добри извори на протеини се пилешкото месо, јајцата, рибата, грчкиот јогурт, урдата, гравот, леќата и друга храна богата со протеини. Корисно е внесот да го распоредите низ оброците, наместо да се потпирате на еден голем оброк. Сепак, протеините се само еден дел од равенката. За градење мускули важни се и редовниот тренинг, доволниот внес на калории, квалитетниот сон, хидратацијата и правилното закрепнување. Најдобро е да создадете урамнотежена рутина што можете постојано да ја следите, наместо да се фокусирате само на една хранлива материја.",
+        "How to Start Going to the Gym":"Како да почнете да одите во теретана",
+        "Starting at the gym can feel intimidating, especially when you see people who already seem experienced. The good news is that everyone starts somewhere. The most important thing for a beginner is to focus on learning the basics and creating a routine that is realistic and easy to maintain. Start with a few training sessions per week and learn how to perform basic movements correctly. Your workouts can include simple strength exercises, cardio and mobility work. There is no need to immediately lift heavy weights or spend hours at the gym. Progress should happen gradually as your body becomes stronger and more comfortable with exercise. It is also important to give yourself enough time to recover between workouts. With consistency, patience and a positive mindset, the gym will become more familiar and your confidence will continue to grow.":"Почетокот во теретана може да делува застрашувачки, особено кога гледате луѓе кои веќе изгледаат искусно. Добрата вест е дека секој почнува од некаде. За почетник најважно е да ги научи основите и да создаде реална рутина што лесно може да ја одржува. Почнете со неколку тренинзи неделно и научете правилно да ги изведувате основните движења. Тренинзите може да вклучуваат едноставни вежби за сила, кардио и вежби за подвижност. Нема потреба веднаш да кревате тешки тегови или да минувате часови во теретана. Напредувајте постепено, додека телото станува посилно и се навикнува на вежбањето. Исто така, оставете си доволно време за закрепнување меѓу тренинзите. Со доследност, трпение и позитивен став, теретаната ќе ви стане попозната, а самодовербата ќе ви расте.",
+        "Fitness Trends 2026":"Фитнес трендови во 2026 година",
+        "Technology continues to influence the way people train, recover and monitor their progress. In 2026, smart fitness equipment, wearable devices, workout applications and digital training platforms are becoming an increasingly common part of modern fitness. These tools can help people track workouts, monitor activity levels, measure progress and stay motivated. However, technology should support your training rather than replace the fundamentals. A successful fitness routine still depends on regular exercise, good nutrition, proper recovery and enough sleep. Another important trend is a more personalized approach to fitness. People are increasingly choosing workouts based on their individual goals, preferences and lifestyles instead of following the same routine as everyone else. Whether you prefer strength training, running, boxing, yoga or group workouts, finding something you enjoy is one of the best ways to stay consistent.":"Технологијата постојано влијае врз начинот на кој луѓето тренираат, закрепнуваат и го следат напредокот. Во 2026 година, паметната фитнес-опрема, носливите уреди, апликациите за тренинг и дигиталните платформи стануваат сè почест дел од современиот фитнес. Овие алатки можат да помогнат во следењето на тренинзите, нивото на активност и напредокот, како и во одржувањето на мотивацијата. Сепак, технологијата треба да го поддржува тренингот, а не да ги заменува основите. Успешната фитнес-рутина и понатаму зависи од редовно вежбање, добра исхрана, правилно закрепнување и доволно сон. Друг важен тренд е поперсонализираниот пристап кон фитнесот. Луѓето сè почесто избираат тренинзи според сопствените цели, желби и начин на живот, наместо да ја следат истата рутина како сите други. Без разлика дали претпочитате тренинг за сила, трчање, бокс, јога или групни тренинзи, најдобро ќе истраете ако најдете активност во која уживате.", "Contact":"Контакт"
+    };
+
+    const originalText = new WeakMap();
+
+    function changeLanguage(language) {
+        if (!['mk', 'en'].includes(language)) return;
+
+        document.documentElement.lang = language;
+
+        const walker = document.createTreeWalker(
+            document.body,
+            NodeFilter.SHOW_TEXT
+        );
+
+        let node;
+
+        while (node = walker.nextNode()) {
+            if (node.parentElement?.closest('.hero')) continue;
+
+            if (!originalText.has(node))
+                originalText.set(node, node.nodeValue);
+
+            const original = originalText.get(node);
+            const text = original.trim().replace(/\s+/g, ' ');
+
+            node.nodeValue = language === 'mk'
+                ? original.replace(original.trim(), translations[text] || original.trim())
+                : original;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        changeLanguage('en');
+
+        const popup = document.querySelector('.popup__text');
+
+        if (popup) {
+            new MutationObserver(() =>
+                changeLanguage(document.documentElement.lang)
+            ).observe(popup, { childList: true, subtree: true });
+        }
+    });
+
+</script>
+
+<!--<div class="spinner">-->
+<!--    <img src="images/logo_1.png" class="loading-logo" alt="Loading">-->
+<!--</div>-->
+
+
+<div class="language-bar">
+    <button type="button" onclick="changeLanguage('mk')">MK</button>
+    <span>|</span>
+    <button type="button" onclick="changeLanguage('en')">EN</button>
+</div>
+
+<nav class="navbar navbar-expand-lg">
+
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="images/logo_top.png" alt="Logo">
+        </a>
+
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarMenu"
+                aria-controls="navbarMenu"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarMenu">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="workouts.html">Workouts</a>
+                </li>
+
+                <li class="nav-item cities-dropdown">
+                    <a class="nav-link cities-link" href="#">Cities</a>
+                    <ul class="custom-menu">
+                        <li>
+                            <a href="Skopje.html">Skopje</a>
+                        </li>
+
+                        <li>
+                            <a href="Ohrid.html">Ohrid</a>
+                        </li>
+
+                        <li>
+                            <a href="Bitola.html">Bitola</a>
+                        </li>
+
+                        <li>
+                            <a href="Tetovo.html">Tetovo</a>
+                        </li>
+
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+</nav>
+
+<section class="hero">
+
+    <img src="images/hero_img.jpg" alt="Hero">
+    <div class="container-fluid px-4 py-5 my-5 text-center">
+        <h1>Mega</h1>
+        <h1>
+            <a href="" class="typewrite" data-period="2000" data-type='[ "Workout", "Boxing", "Running", "Fitness", "Yoga" ]'>
+                <span class="wrap"></span>
+            </a>
+        </h1>
+        <h1>Club</h1>
+    </div>
+</section>
+
+<section class="about-us">
+    <div class="title">About us</div>
+    <div class="container">
+        We’re more than just a gym — we’re a community built on strength, discipline, and progress. Whether you’re just starting or pushing your limits, we’re here to help you become stronger, healthier, and more confident.
+    </div>
+    <div class="anima-container">
+        <ul class="home_title">
+
+            <li>
+                <div class="left">
+                    <h2><span>Group Training</span></h2>
+                </div>
+                <div class="right">
+                    <h2><span>Group Training</span></h2>
+                </div>
+            </li>
+
+            <li>
+                <div class="left">
+                    <h2><span> Best Coaches </span></h2>
+                </div>
+                <div class="right">
+                    <h2><span>Best Coaches</span></h2>
+                </div>
+            </li>
+
+            <li>
+                <div class="left">
+                    <h2><span>Classes Every Day</span></h2>
+                </div>
+                <div class="right">
+                    <h2><span> Classes Every Day</span></h2>
+                </div>
+            </li>
+            <li>
+                <div class="left">
+                    <h2><span>4 Cities</span></h2>
+                </div>
+                <div class="right">
+                    <h2><span>4 Cities</span></h2>
+                </div>
+            </li>
+
+        </ul>
+    </div>
+</section>
+
+<section class="video">
+    <div class="container text-center">
+        <div id="expandable">
+            Mega<br>
+            Where Tradition <br>Meets Performance
+        </div>
+
+        <video width="320" height="450" autoplay muted loop>
+            <source src="images/video_gym.mp4" type="video/mp4">
+        </video>
+    </div>
+</section>
+
+<section class="our-workouts">
+    <div class="container">
+
+        <div class="title">Our Workouts</div>
+
+        <div class="row">
+
+            <div class="col-4">
+                <img src="images/fit.jpg"
+                     class="workout-image"
+                     id="workoutImage"
+                     alt="Workout">
+            </div>
+
+            <div class="col-8">
+
+                <div class="workouts-list">
+
+                    <div class="workout-item" data-image="images/workout.jpg">
+
+                        <h2 class="workout-header">
+                            Workout
+                        </h2>
+
+                        <div class="workout-description">
+                            Build strength, improve your endurance, and challenge yourself with workouts designed to help you become stronger, healthier, and more confident.
+                        </div>
+
+                    </div>
+
+
+                    <div class="workout-item" data-image="images/boxing.jpg">
+
+                        <h2 class="workout-header">
+                            Boxing
+                        </h2>
+
+                        <div class="workout-description">
+                            Develop your speed, power, coordination, and technique while building confidence through dynamic and challenging boxing training.
+                        </div>
+
+                    </div>
+
+
+                    <div class="workout-item" data-image="images/running.jpg">
+
+                        <h2 class="workout-header">
+                            Running
+                        </h2>
+
+                        <div class="workout-description">
+                            Improve your stamina, endurance, and overall fitness with running sessions designed to keep you moving, motivated, and ready to reach your goals.
+                        </div>
+
+                    </div>
+
+
+                    <div class="workout-item" data-image="images/fit.jpg">
+
+                        <h2 class="workout-header">
+                            Fitness
+                        </h2>
+
+                        <div class="workout-description">
+                            Take your fitness to the next level with exercises that improve your strength, endurance, mobility, and overall physical performance.
+                        </div>
+
+                    </div>
+
+
+                    <div class="workout-item" data-image="images/yoga.jpg">
+
+                        <h2 class="workout-header">
+                            Yoga
+                        </h2>
+
+                        <div class="workout-description">
+                            Improve your flexibility, balance, strength, and focus while relaxing your body and mind through a combination of controlled movements and breathing.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="faq1">
+    <div id="fa">
+        <section class="faq">
+            <div class="faq-title">
+                <h2>FAQs</h2>
+            </div>
+            <div class="faq-questions">
+                <details>
+                    <summary>
+                        <span>Is it for me?</span><span class="plus"></span>
+                    </summary>
+                    <p>Our classes are suitable for beginners and experienced athletes. We will help you find the right level for you.</p>
+                </details>
+
+                <details>
+                    <summary>
+                        <span>What can I expect?</span><span class="plus"></span>
+                    </summary>
+                    <p>You can expect a welcoming environment, professional coaching, and workouts adapted to your level.</p>
+                </details>
+
+                <details>
+                    <summary>
+                        <span>What is a lesson like?</span><span class="plus"></span>
+                    </summary>
+                    <p>Each lesson includes a warm-up, instruction, the main workout, and a cool-down.</p>
+                </details>
+
+                <details>
+                    <summary>
+                        <span>Can I train with an injury?</span><span class="plus"></span>
+                    </summary>
+                    <p>Please speak with your coach before training so we can determine whether exercises can safely be adapted.</p>
+                </details>
+
+
+            </div>
+        </section>
+    </div>
+</section>
+
+<section class="team">
+
+    <h1>Meet the team</h1>
+
+    <div class="container">
+
+        <div style="background-image: url('images/coach_1.jpg');">
+            <div class="content">
+                <h2>Elena Stojanovska</h2>
+                <span>Life Coach & Personal Trainer</span>
+                <p>Helping members build confidence, healthy habits, and a stronger mindset.</p>
+            </div>
+        </div>
+
+        <div style="background-image: url('images/coach_2.jpg');">
+            <div class="content">
+                <h2>Goran Petrovski</h2>
+                <span>Senior Fitness Coach</span>
+                <p>Bringing years of experience in strength training, fitness, and personal coaching.</p>
+            </div>
+        </div>
+
+        <div style="background-image: url('images/coach_3.jpg');">
+            <div class="content">
+                <h2>Marija Nikolovska</h2>
+                <span>Running Coach</span>
+                <p>Specializing in endurance, running technique, and helping athletes become stronger and faster.</p>
+            </div>
+        </div>
+
+        <div style="background-image: url('images/coach_4.jpg');">
+            <div class="content">
+                <h2>Viktor Trajkov</h2>
+                <span>Boxing Instructor</span>
+                <p>Focused on boxing technique, conditioning, discipline, and confidence.</p>
+            </div>
+        </div>
+
+        <div style="background-image: url('images/coach_5.jpg');">
+            <div class="content">
+                <h2>Ana Ilievska</h2>
+                <span>Yoga Instructor</span>
+                <p>Helping members improve flexibility, balance, breathing, and mind-body connection.</p>
+            </div>
+        </div>
+
+        <div style="background-image: url('images/coach_6.jpg');">
+            <div class="content">
+                <h2>Filip Georgiev</h2>
+                <span>CrossFit Instructor</span>
+                <p>Specializing in functional movements, strength, endurance, and high-intensity workouts.</p>
+            </div>
+        </div>
+
+        <div style="background-image: url('images/coach_7.jpg');">
+            <div class="content">
+                <h2>Stefan Stojanov</h2>
+                <span>Full-Body Workout Instructor</span>
+                <p>Creating dynamic workouts focused on strength, endurance, and overall fitness.</p>
+            </div>
+        </div>
+
+        <div style="background-image: url('images/coach_8.jpg');">
+            <div class="content">
+                <h2>Ivan Ristovski</h2>
+                <span>Experienced Boxing Coach</span>
+                <p>Focused on endurance training, boxing technique, and helping runners reach their full potential.</p>
+            </div>
+        </div>
+
+        <div style="background-image: url('images/coach_9.jpg');">
+            <div class="content">
+                <h2>Elena Petrova</h2>
+                <span>Nutritionist</span>
+                <p>Creating personalized nutrition plans to support fitness goals, energy, recovery, and a healthy lifestyle.</p>
+            </div>
+        </div>
+
+
+        <div style="background-image: url('images/coach_10.png');">
+            <div class="content">
+                <h2>Nikola Milevski</h2>
+                <span>Medical Expert</span>
+                <p>Providing professional guidance on safe training, recovery, and maintaining a healthy body.</p>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<section class="who_are_we">
+    <h1 class="title">This is mega </h1>
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-4 ">
+                <h2>Guaranteed Results</h2>
+                <div>
+                    At MEGA, we believe that consistency creates results. Our workouts are designed to help you become stronger, fitter, and more confident. Show up, put in the work, and stay committed — the results will follow. No shortcuts, no empty promises, just real progress.
+                </div>
+            </div>
+            <div class="col-4 "></div>
+            <div class="col-4"></div>
+        </div>
+        <div class="row">
+            <div class="col-4 "></div>
+            <div class="col-4 ">
+                <h2>Personalized Training</h2>
+                <div>
+                    Training that works for you. Everyone has different goals, fitness levels, and ways of training. Our coaches are here to help you find what works best for you and push you to improve at your own pace. Whether you're a beginner or experienced athlete, there is always a place for you at MEGA.                </div>
+
+            </div>
+            <div class="col-4"></div>
+        </div>
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4"></div>
+            <div class="col-4">
+                <h2>Workout Club</h2>
+                <div>
+                    More ways to train. More ways to move. MEGA is a modern, multidisciplinary Workout Club where you can choose how you want to train. From strength and fitness to boxing, running, and yoga — explore different workouts, challenge yourself, and find what you enjoy. Because training should be effective, challenging, and something you look forward to.
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<section class="loactions">
+    <h1>our clubs</h1>
+    <h4>pay for one, use them all</h4>
+    <div class="container">
+
+        <div class="slide">
+
+            <div class="item" style="background-image: url('images/skopje.jpg');">
+                <div class="content">
+                    <h2>Skopje</h2>
+                    <p>Train, recover, and stay active at our location in the heart of Skopje.</p>
+                    <p class="address">Address: Partizanska 15, Skopje</p>
+                </div>
+            </div>
+
+            <div class="item" style="background-image: url('images/ohrid.jpg');">
+                <div class="content">
+                    <h2>Ohrid</h2>
+                    <p>Enjoy your fitness journey surrounded by the beautiful scenery of Ohrid.</p>
+                    <p class="address">Address: Kej Makedonija 25, Ohrid</p>
+                </div>
+            </div>
+
+            <div class="item" style="background-image: url('images/bitola.jpg');">
+                <div class="content">
+                    <h2>Bitola</h2>
+                    <p>Stay strong and motivated with professional training in Bitola.</p>
+                    <p class="address">Address: Shirok Sokak 42, Bitola</p>
+                </div>
+            </div>
+
+            <div class="item" style="background-image: url('images/tetovo.jpg');">
+                <div class="content">
+                    <h2>Tetovo</h2>
+                    <p>Reach your fitness goals with our modern training facilities in Tetovo.</p>
+                    <p class="address">Address: Ilindenska 18, Tetovo</p>
+                </div>
+            </div>
+
+        </div>
+        <div class="buttons">
+            <button class="prev">❮</button>
+            <button class="next">❯</button>
+        </div>
+
+    </div>
+
+
+
+</section>
+
+<section class="blog bg-light" id="blog1">
+
+    <div class="news-header">
+        <h1>LATEST NEWS</h1>
+    </div>
+
+    <div class="container">
+        <div class="row">
+
+            <!-- LEFT -->
+            <div class="col-md-4">
+
+                <a href="#popup" class="blog-card"
+                   onclick="openArticle(
+                   'images/protein.jpg',
+                   'How Much Protein Do You Need to Build Muscle?',
+                   'August 25th, 2026',
+    'Protein plays an important role in building, repairing and maintaining muscle. When you train, especially during strength workouts, your muscles need enough nutrients to recover and adapt. Getting enough protein throughout the day can support this process and help you make better progress over time. Good protein sources include chicken, eggs, fish, Greek yogurt, cottage cheese, beans, lentils and other protein-rich foods. It is also helpful to spread your protein intake across your meals instead of relying on one large meal. However, protein is only one part of the equation. Consistent training, enough calories, quality sleep, hydration and proper recovery are all important for building muscle. The best approach is to create a balanced routine that you can maintain consistently rather than focusing on one single nutrient.'
+                   )">
+
+                    <div class="blog-image"
+                         style="background-image: url('images/protein.jpg');">
+                    </div>
+
+                    <div class="blog-text">
+                        <span>August 25th, 2026</span>
+                        <h2>How Much Protein Do You Need to Build Muscle?</h2>
+                    </div>
+
+                </a>
+
+
+                <a href="#popup" class="blog-card"
+                   onclick="openArticle(
+                   'images/trainer.jpg',
+                   'Personal Trainer or Fitness Coach? How to Choose the Right Pro for Your Goals',
+                   'August 17th, 2026',
+    'Choosing the right fitness professional can make a big difference in your training experience. A personal trainer usually focuses on creating structured workouts, teaching proper exercise technique and helping you safely progress toward specific fitness goals. A fitness coach may take a broader approach by focusing on motivation, consistency, habits and your overall lifestyle. If you are new to the gym and are not sure how to perform exercises correctly, working with a personal trainer can give you the confidence and knowledge you need to get started. If you already understand the basics of training but have trouble staying consistent, a coach may be able to help you build better habits. Before choosing someone, think about your goals, experience and the type of support you need. The right professional should help you feel motivated, comfortable and confident during your fitness journey.'
+                   )">
+
+                    <div class="blog-image"
+                         style="background-image: url('images/trainer.jpg');">
+                    </div>
+
+                    <div class="blog-text">
+                        <span>August 17th, 2026</span>
+                        <h2>Personal Trainer or Fitness Coach? How to Choose the Right Pro for Your Goals</h2>
+                    </div>
+
+                </a>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <a href="#popup" class="blog-card big"
+                   onclick="openArticle(
+                   'images/logo_white_full.png',
+                   'Is a Gym Membership Worth It?',
+                   'August 4th, 2026',
+    'A gym membership can be much more than simply having access to exercise equipment. Having a dedicated place to train can help you create a routine, stay motivated and make fitness a regular part of your lifestyle. At Mega Gym, members can choose from different types of training depending on their interests, fitness level and personal goals. Whether you want to build strength, improve your endurance, lose weight, become more active or simply feel healthier, having access to professional equipment and experienced coaches can make the process easier. Another important benefit of training at a gym is the environment. Being surrounded by other people who are working toward their own goals can give you extra motivation on days when you do not feel like training. Ultimately, a gym membership is an investment in your health, confidence and long-term wellbeing.'
+                   )">
+
+                    <div class="blog-image"
+                         style="background-image: url('images/logo_white_full.png');">
+                    </div>
+
+                    <div class="blog-text">
+                        <span>August 4th, 2026</span>
+                        <h2>Is a Gym Membership Worth It? Why Joining Mega Gym Pays Off</h2>
+                    </div>
+
+                </a>
+
+            </div>
+
+
+            <!-- RIGHT -->
+            <div class="col-md-4">
+
+                <a href="#popup" class="blog-card"
+                   onclick="openArticle(
+                   'images/start_gym.jpg',
+                   'How to Start Going to the Gym',
+                   'July 23rd, 2026',
+    'Starting at the gym can feel intimidating, especially when you see people who already seem experienced. The good news is that everyone starts somewhere. The most important thing for a beginner is to focus on learning the basics and creating a routine that is realistic and easy to maintain. Start with a few training sessions per week and learn how to perform basic movements correctly. Your workouts can include simple strength exercises, cardio and mobility work. There is no need to immediately lift heavy weights or spend hours at the gym. Progress should happen gradually as your body becomes stronger and more comfortable with exercise. It is also important to give yourself enough time to recover between workouts. With consistency, patience and a positive mindset, the gym will become more familiar and your confidence will continue to grow.'
+                   )">
+
+                    <div class="blog-image"
+                         style="background-image: url('images/start_gym.jpg');">
+                    </div>
+
+                    <div class="blog-text">
+                        <span>July 23rd, 2026</span>
+                        <h2>How to Start Going to the Gym: Step-by-Step Guide for Beginners</h2>
+                    </div>
+
+                </a>
+
+
+                <a href="#popup" class="blog-card"
+                   onclick="openArticle(
+                   'images/gym_tech.jpg',
+                   'Fitness Trends 2026',
+                   'July 17th, 2026',
+    'Technology continues to influence the way people train, recover and monitor their progress. In 2026, smart fitness equipment, wearable devices, workout applications and digital training platforms are becoming an increasingly common part of modern fitness. These tools can help people track workouts, monitor activity levels, measure progress and stay motivated. However, technology should support your training rather than replace the fundamentals. A successful fitness routine still depends on regular exercise, good nutrition, proper recovery and enough sleep. Another important trend is a more personalized approach to fitness. People are increasingly choosing workouts based on their individual goals, preferences and lifestyles instead of following the same routine as everyone else. Whether you prefer strength training, running, boxing, yoga or group workouts, finding something you enjoy is one of the best ways to stay consistent.'
+                   )">
+
+                    <div class="blog-image"
+                         style="background-image: url('images/gym_tech.jpg');">
+                    </div>
+
+                    <div class="blog-text">
+                        <span>July 17th, 2026</span>
+                        <h2>Fitness Trends 2026: What’s Next in Wellness, Tech & Training</h2>
+                    </div>
+
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="popup" id="popup">
+
+        <div class="popup-inner">
+
+            <div class="popup__photo">
+                <img id="articleImage" src="" alt="">
+            </div>
+
+            <div class="popup__text">
+
+                <span id="articleDate"></span>
+
+                <h1 id="articleTitle"></h1>
+
+                <p id="articleText"></p>
+
+            </div>
+
+            <a class="popup__close" href="#blog1">X</a>
+
+        </div>
+
+    </div>
+
+</section>
+
+<div class="decor"></div>
+
+<section class="testemonials">
+    <section class="py-5">
+        <div class="container">
+
+            <div class="testimonial position-relative p-4 py-md-5">
+
+                <div class="row align-items-center">
+
+                    <div class="col-md-4 text-white text-center text-md-end">
+                        <h3 class="display-6">
+                            What our <strong>members say</strong>
+                        </h3>
+
+                        <p>
+                            Real experiences from people who train with us every day.
+                        </p>
+                    </div>
+
+                    <div class="col-md-8">
+
+                        <div id="testimonials" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+
+                            <div class="carousel-inner">
+
+                                <div class="carousel-item active">
+                                    <div class="testimonial-card">
+
+                                        <img src="images/person_1.jpg">
+
+                                        <div>
+                                            <p>
+                                                I love the atmosphere here. The trainers are supportive, the equipment is great,
+                                                and I always feel motivated to come back.
+                                            </p>
+
+                                            <div class="stars">★★★★★</div>
+
+                                            <h4>Aleksandar Petrovski</h4>
+                                            <span>Gym Member</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="carousel-item">
+                                    <div class="testimonial-card">
+
+                                        <img src="images/person_2.jpg">
+
+                                        <div>
+                                            <p>
+                                                Since I started training here, I have noticed a big difference. I feel stronger,
+                                                healthier, and much more confident.
+                                            </p>
+
+                                            <div class="stars">★★★★★</div>
+
+                                            <h4>Elena Stojanovska</h4>
+                                            <span>Gym Member</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="carousel-item">
+                                    <div class="testimonial-card">
+
+                                        <img src="images/person_3.jpg">
+
+                                        <div>
+                                            <p>
+                                                Great gym with a friendly atmosphere. The workouts are challenging and the
+                                                trainers always help you push yourself further.
+                                            </p>
+
+                                            <div class="stars">★★★★★</div>
+
+                                            <h4>David Nikolov</h4>
+                                            <span>Gym Member</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="carousel-indicators position-relative mt-4">
+                                <button data-bs-target="#testimonials" data-bs-slide-to="0" class="active"></button>
+                                <button data-bs-target="#testimonials" data-bs-slide-to="1"></button>
+                                <button data-bs-target="#testimonials" data-bs-slide-to="2"></button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+</section>
+
+<div class="decor"></div>
+
+<section class="contact">
+    <div class="row">
+        <div class="col-8">
+            <div class="contact-text">
+                <h2>
+                    If you have any other questions, we're right behind this phone number.
+                </h2>
+
+                <a href="sms:+389123456789" class="button">
+                    TEXT US
+                </a>
+            </div>
+        </div>
+        <div class="col-4">
+            <img src="images/phone_image.webp" class="phone">
+        </div>
+    </div>
+</section>
+
+<footer class="mt-auto text-white"
+        style="background: linear-gradient(135deg, #180000 0%, #4a0000 50%, #050505 100%);">
+
+    <div class="py-5">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
+
+            <div>
+                <h4 class="mb-1">Ready to get started?</h4>
+                <p class="mb-0 opacity-75">
+                    Start your fitness journey today with Mega Gym.
+                </p>
+            </div>
+
+            <a href="http://localhost:63342/DP-project/DP-project/Skopje.html#booking" class="btn btn-light btn-lg flex-shrink-0">
+                Join us now
+            </a>
+
+        </div>
+    </div>
+
+    <div class="py-3 border-top border-secondary">
+        <div class="container d-flex justify-content-between small text-white-50">
+
+            <span>&copy; 2026 Mega Gym</span>
+
+            <div class="d-flex gap-3">
+                <a class="text-white-50 text-decoration-none" href="">Workouts</a>
+                <a class="text-white-50 text-decoration-none" href="">Cities</a>
+                <a class="text-white-50 text-decoration-none" href="">Contact</a>
+
+            </div>
+
+        </div>
+    </div>
+
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script src="script.js"></script>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

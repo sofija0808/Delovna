@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding-top: 185px;
+            font-family: "Bungee", sans-serif;
+        }
+
+
+        @keyframes pulse {
+            50% {
+                transform: scale(1.03);
+            }
+        }
+
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            visibility: hidden;
+            opacity: 0;
+            z-index: 1000;
+
+            transition: 0.4s;
+        }
+
+        .popup:target {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .popup-inner {
+            position: relative;
+
+            display: flex;
+
+            width: 70%;
+            max-width: 900px;
+            height: 500px;
+
+            background: white;
+
+            transform: scale(0.8);
+            transition: 0.4s;
+        }
+
+        .popup:target .popup-inner {
+            transform: scale(1);
+        }
+
+        .popup__photo {
+            width: 40%;
+            overflow: hidden;
+        }
+
+        .popup__photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .popup__text {
+            width: 60%;
+            padding: 50px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .popup__text span {
+            color: #740102;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .popup__text h1 {
+            font-size: 32px;
+            margin-bottom: 25px;
+            color: #111;
+        }
+
+        .popup__text p {
+            font-size: 12px;
+            line-height: 1.7;
+            color: #666;
+            font-family: Arial, sans-serif;
+        }
+
+        .popup__close {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+
+            width: 40px;
+            height: 40px;
+
+            background: #740102;
+            color: white;
+
+            border-radius: 50%;
+
+            text-decoration: none;
+            text-align: center;
+            line-height: 40px;
+
+            font-weight: bold;
+        }
+
+        .language-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1100;
+            width: 100%;
+            height: 35px;
+            background: #000;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding-right: 30px;
+            gap: 8px;
+        }
+
+        .language-bar button {
+            background: none;
+            border: none;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .language-bar button:hover {
+            color: #740102;
+        }
+
+        .language-bar span {
+            color: white;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 35px;
+            left: 0;
+            z-index: 1000;
+
+            width: 100%;
+            height: 150px;
+
+            background: black;
+            padding: 0;
+        }
+
+        .navbar .container-fluid {
+            position: relative;
+            height: 100%;
+            padding: 0;
+        }
+
+        .navbar-brand {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+
+            transform: translate(-50%, -50%);
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar-brand img {
+            display: block;
+            width: clamp(110px, 10vw, 150px);
+        }
+
+        .navbar-collapse {
+            width: 100%;
+        }
+
+        .navbar-nav {
+            position: relative;
+
+            width: 100%;
+            height: 100%;
+
+            margin: 0;
+            padding: 0;
+
+            list-style: none;
+        }
+
+        .navbar-nav .nav-item:first-child {
+            position: absolute;
+            left: 18%;
+            top: 50%;
+
+            transform: translateY(-50%);
+            margin: 0;
+        }
+
+        .cities-dropdown {
+            position: absolute;
+            right: 18%;
+            top: 50%;
+
+            transform: translateY(-50%);
+            margin: 0;
+        }
+
+        .nav-link {
+            position: relative;
+            display: inline-block;
+
+            color: #740102 !important;
+            font-size: clamp(30px, 3.2vw, 50px);
+
+            line-height: 1;
+            padding: 0 !important;
+
+            text-decoration: none;
+        }
+
+        .nav-item > .nav-link::before,
+        .nav-item > .nav-link::after {
+            content: "";
+
+            position: absolute;
+            left: 0;
+
+            width: 100%;
+            height: 3px;
+
+            background: #740102;
+
+            transform: scaleX(0);
+            transition: transform 0.4s ease-out;
+        }
+
+        .nav-item > .nav-link::before {
+            top: -5px;
+            transform-origin: left;
+        }
+
+        .nav-item > .nav-link::after {
+            bottom: -5px;
+            transform-origin: right;
+        }
+
+        .nav-item > .nav-link:hover::before,
+        .nav-item > .nav-link:hover::after {
+            transform: scaleX(1);
+        }
+
+        .custom-menu {
+            position: absolute;
+            top: 55px;
+            right: 0;
+
+            margin: 0;
+            padding: 0;
+
+            list-style: none;
+            text-align: right;
+            white-space: nowrap;
+
+            opacity: 0;
+            visibility: hidden;
+
+            transform: translateY(-10px);
+
+            transition:
+                    opacity 0.35s ease,
+                    transform 0.35s ease;
+        }
+
+        .cities-dropdown:hover .custom-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .custom-menu a {
+            position: relative;
+            display: inline-block;
+
+            padding: 4px 0;
+
+            color: #740102;
+            font-size: clamp(20px, 2vw, 30px);
+
+            text-decoration: none;
+        }
+
+        .custom-menu a::after {
+            content: "";
+
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+
+            width: 100%;
+            height: 2px;
+
+            background: #740102;
+
+            transform: scaleX(0);
+            transform-origin: right;
+
+            transition: transform 0.4s ease-out;
+        }
+
+        .custom-menu a:hover::after {
+            transform: scaleX(1);
+        }
+
+        .navbar::after {
+            content: "";
+
+            position: absolute;
+            top: 150px;
+            left: 0;
+
+            width: 100%;
+            height: 0;
+
+            background: black;
+
+            transition: height 0.35s ease;
+
+            z-index: -1;
+        }
+
+        .navbar:has(.cities-dropdown:hover)::after {
+            height: 230px;
+        }
+
+        .navbar-toggler {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            border: none;
+            padding: 5px;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+
+        .navbar-toggler-icon {
+            filter:
+                    brightness(0)
+                    saturate(100%)
+                    invert(10%)
+                    sepia(90%)
+                    saturate(4000%)
+                    hue-rotate(350deg)
+                    brightness(60%);
+        }
+
+        @media (max-width: 991.98px) {
+            body { padding-top: 145px; }
+            .navbar {
+                height: 110px;
+            }
+
+            .navbar-brand img {
+                width: 100px;
+            }
+
+            .navbar-collapse {
+                position: absolute;
+
+                top: 110px;
+                left: 0;
+
+                width: 100%;
+                height: auto;
+
+                background: black;
+            }
+
+            .navbar-nav {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                height: auto;
+                padding: 20px 0;
+
+                gap: 10px;
+            }
+
+            .navbar-nav .nav-item:first-child,
+            .cities-dropdown {
+                position: static;
+
+                transform: none;
+                margin: 0;
+            }
+
+            .nav-link {
+                font-size: 30px;
+            }
+
+            .custom-menu {
+                position: static;
+
+                margin-top: 10px;
+
+                text-align: center;
+            }
+
+            .navbar::after {
+                display: none;
+            }
+        }
+
+        .city-part {
+            position: relative;
+            width: 100%;
+            height: 500px;
+        }
+
+        .city-part img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .city-name {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: red;
+            font-size: 200px;
+            font-family: "Russo One", sans-serif;
+            text-align: center;
+
+        }
+
+        .pricing {
+            width: 100%;
+            margin: 0 auto;
+            padding: 100px 20px;
+            background-color: #080808;
+            text-align: center;
+            font-family: "Russo One", sans-serif;
+        }
+
+        .pricing h2 {
+            font-size: 64px;
+            color: #ffffff;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        .pricing-tabs {
+            display: inline-flex;
+            background: #141414;
+            padding: 6px;
+            border-radius: 50px;
+            gap: 8px;
+            margin-bottom: 60px;
+            border: 1px solid #222;
+        }
+
+        .tab {
+            background: transparent;
+            border: none;
+            padding: 12px 28px;
+            cursor: pointer;
+            color: #888;
+            font-size: 16px;
+            font-family: inherit;
+            border-radius: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .tab:hover {
+            color: #ffffff;
+        }
+
+        .tab.active {
+            background: #740102;
+            color: #ffffff;
+            box-shadow: 0 4px 20px rgba(116, 1, 2, 0.4);
+        }
+
+        /* Card Grid */
+        .pricing-cards {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+
+        .price-card {
+            background: linear-gradient(145deg, #121212, #0a0a0a);
+            padding: 40px 30px;
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: center;
+            border: 1px solid #222;
+            width: 280px;
+            border-radius: 16px;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .price-card:hover {
+            transform: translateY(-8px);
+            border-color: #740102;
+            box-shadow: 0 12px 40px rgba(116, 1, 2, 0.2);
+        }
+
+        .price-card h3 {
+            font-size: 24px;
+            margin: 0 0 15px 0;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+
+        .price {
+            font-size: 38px;
+            margin: 15px 0;
+            color: #ff3b3d;
+        }
+
+        .info {
+            font-size: 15px;
+            margin: 0;
+            color: #b0b0b0;
+            line-height: 1.5;
+            font-weight: normal;
+        }
+        .map-container {
+            background-color: black;
+            width: 100%;
+            margin: 0 auto;
+            padding: 60px 0;
+        }
+
+        .map-container h1 {
+            color: #740102;
+            margin: 0 0 10px 50px;
+            font-weight: bold;
+            font-family: "Montserrat", sans-serif;
+            text-shadow: 2px 2px 2px white;
+        }
+        .map-container iframe {
+            display: block;
+            width: 60%;
+            height: 550px;
+            border: 0;
+            margin: 0 auto;
+        }
+        #where {
+            font-size: 130px;
+        }
+        #grad {
+            font-size: 100px;
+            color: white;
+            text-transform: uppercase;
+            font-family: "Montserrat", sans-serif;
+
+        }
+        #grad:hover {
+            color: #740102;
+        }
+
+        .booking{
+            width: 100%;
+            min-height: 700px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: black;
+            color: white;
+            padding: 40px 10%;
+            gap: 50px;
+        }
+        .info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .info h1 {
+            font-size: 100px;
+            color: #740102;
+            margin-bottom: 70px;
+            margin-top: 10px;
+        }
+
+        .steps {
+            max-width: 600px;
+        }
+
+        .booking-steps p {
+            font-size: 60px;
+            margin-bottom: 25px;
+            color: white;
+        }
+
+        .booking-steps {
+            color: white;
+            font-size: 20px;
+            margin-right: 8px;
+        }
+        .form-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .form {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-family: "Russo One", sans-serif;
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: white;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            height: 50px;
+            padding: 10px 15px;
+            background: transparent;
+            border: 2px solid #740102;
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: white;
+        }
+
+        .form-group select option {
+            color: black;
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 8px;
+            font-family: Arial, sans-serif;
+            font-size: 15px;
+            color: white;
+            line-height: 1.4;
+        }
+
+        .privacy-check {
+            display: flex;
+            gap: 10px;
+            margin: 25px 0;
+        }
+
+        .privacy-check input {
+            margin-top: 4px;
+        }
+
+        .privacy-check label {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        .privacy-check a {
+            color: #740102;
+        }
+
+        .booking-form button {
+            width: 100%;
+            height: 60px;
+            border: 2px solid #740102;
+            background: #740102;
+            color: white;
+            font-family: "Russo One", sans-serif;
+            font-size: 22px;
+        }
+
+        .booking-form button:hover {
+            background: transparent;
+            color: #740102;
+        }
+        #free {
+            color: red;
+        }
+
+        .workouts-section {
+            background: black;
+            color: white;
+            padding: 60px 0;
+            overflow: hidden;
+        }
+
+        .workouts-section h2 {
+            font-family: "Russo One", sans-serif;
+            color: #740102;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .schedule-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .days-container {
+            display: flex;
+            gap: 15px;
+        }
+        .days-viewport {
+            width: 180px;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .days-track {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .day-tab {
+            font-family: "Russo One", sans-serif;
+            color: white;
+            background: #111;
+            border: 2px solid #740102;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            flex: 0 0 100%;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .day-tab.active {
+            background-color: #740102;
+        }
+        .day-tab:hover {
+            color: white;
+            border-color: #740102;
+        }
+        .workout-slider {
+            width: 1000px;
+            max-width: 90%;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
+        .slider-viewport {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .workout-track {
+            display: flex;
+            gap: 30px;
+            transition: transform 0.5s ease;
+        }
+        .workout-card {
+            flex: 0 0 100%;
+            min-height: 420px;
+            padding: 45px 50px;
+            background: #111;
+            border: 1px solid #333;
+            border-left: 5px solid #740102;
+            box-sizing: border-box;
+            border-radius: 2px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            transition: border-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .workout-card:hover {
+            border-color: #740102;
+        }
+
+        .workout-number {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            letter-spacing: 4px;
+            color: #740102;
+            margin-bottom: 18px;
+        }
+
+        .workout-card h3 {
+            font-family: "Russo One", sans-serif;
+            color: white;
+            font-size: clamp(42px, 5vw, 70px);
+            line-height: 1;
+            margin: 0 0 25px;
+            letter-spacing: 1px;
+        }
+
+        .workout-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            color: #aaa;
+        }
+
+        .workout-meta .separator {
+            color: #740102;
+            font-size: 18px;
+        }
+
+        .workout-card p {
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            line-height: 1.7;
+            color: #ccc;
+            margin: 0;
+            max-width: 650px;
+        }
+
+        .workout-card .workout-description {
+            border-top: 1px solid #333;
+            padding-top: 25px;
+        }
+        .slider-arrow {
+            width: 45px;
+            height: 45px;
+            border: 2px solid #740102;
+            background: black;
+            color: #740102;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .slider-arrow:hover {
+            background: #740102;
+            color: white;
+        }
+        @keyframes colorCycle {
+            0% { color: #740102}
+            50% { color: #ffffff }
+            100% { color: #740102 }
+        }
+        @keyframes bounceMovement {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .train {
+            position: relative;
+            background-image:
+                    linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)),
+                    url('images/mak_vez.jpg');
+            background-size: contain;
+            background-repeat: repeat;
+            border-top: 4px solid #740102;
+            border-bottom: 4px solid #740102;
+            text-align: center;
+            padding: 80px 20px;
+            min-height: 400px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .train h1 {
+            font-family: "Russo One", sans-serif;
+            color: white;
+            font-size: 65px;
+            line-height: 1.2;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+            position: relative;
+            z-index: 2;
+            animation: bounceMovement 2s ease infinite;
+            display: inline-block;
+        }
+
+        .train #name {
+            display: inline-block;
+            animation: colorCycle 2s ease-in-out infinite;
+        }
+
+        #name:hover {
+            animation: colorCycle 0.5s ease-in-out infinite;
+            cursor: pointer;
+        }
+        .space {
+            width: 100%;
+            min-height: 600px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            background: black;
+            color: white;
+            padding: 60px 10%;
+            box-sizing: border-box;
+            gap: 50px;
+        }
+
+        .space-text {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .space h1 {
+            color: #740102;
+            font-family: "Russo One", sans-serif;
+            font-size: 60px;
+            margin: 0;
+        }
+
+        .space p {
+            color: white;
+            width: 100%;
+            font-size: 22px;
+            line-height: 1.5;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            text-transform: none;
+        }
+
+        .space video {
+            width: 100%;
+            height: auto;
+            border: 2px solid #740102;
+        }
+
+        @keyframes bounceMovement {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        #free {
+            display: inline-block;
+            animation: bounceMovement 1s ease infinite;
+            color: white;
+        }
+        .contact {
+            width: 100%;
+            min-height: 500px;
+            display: grid;
+            grid-template-columns: 70% 30%;
+            background-color: white;
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .text {
+            background-color: white;
+            padding: 50px;
+        }
+
+        .text h2 {
+            font-size: 80px;
+            font-family: "Russo One", sans-serif;
+            color: #740102;
+            margin: 0 0 40px 0;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #740102;
+            color: white;
+            padding: 15px 80px;
+            font-size: 35px;
+            text-decoration: none;
+            font-weight: bold;
+            border: 2px solid transparent;
+        }
+
+        .button:hover {
+            background-color: white;
+            color: #740102;
+            border: 10px solid #740102;
+        }
+        .phone {
+            background-color: #ddd;
+
+        }
+        @keyframes multiAxisMovement {
+            0% {
+                transform: translateX(-10px) translateY(0px) scale(1) rotate(-10deg);
+            }
+            50% {
+                transform: translateX(10px) translateY(-5px) scale(1.01) rotate(10deg);
+            }
+            100% {
+                transform: translateX(-10px) translateY(0px) scale(1) rotate(-10deg);
+            }
+        }
+
+        .phone {
+            animation: multiAxisMovement 2s ease-in-out infinite;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="language-bar">
+    <button type="button" onclick="changeLanguage('mk')">MK</button>
+    <span>|</span>
+    <button type="button" onclick="changeLanguage('en')">EN</button>
+</div>
+
+<nav class="navbar navbar-expand-lg">
+
+    <div class="container-fluid">
+        <a class="navbar-brand" href="home.html">
+            <img src="images/logo_top.png" alt="Logo">
+        </a>
+
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarMenu"
+                aria-controls="navbarMenu"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarMenu">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="workouts.html">Workouts</a>
+                </li>
+
+                <li class="nav-item cities-dropdown">
+                    <a class="nav-link cities-link" href="#">Cities</a>
+                    <ul class="custom-menu">
+                        <li>
+                            <a href="Skopje.html">Skopje</a>
+                        </li>
+
+                        <li>
+                            <a href="Ohrid.html">Ohrid</a>
+                        </li>
+
+                        <li>
+                            <a href="Bitola.html">Bitola</a>
+                        </li>
+
+                        <li>
+                            <a href="Tetovo.html">Tetovo</a>
+                        </li>
+
+                    </ul>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+</nav>
+
+<section class="city-part">
+    <img src="../DP-project/images/skopje_imag.png" alt="Skopje">    <div class="city-name">SKOPJE</div>
+</section>
+<section class="space">
+    <video src="images/gym2.mp4" autoplay muted loop></video>
+    <div class="space-text">
+        <h1>THE SPACE</h1>
+        <p>
+            You can search, but there’s nothing like it in Skopje.
+            More than 500 m² of hybrid training space divided into two areas:
+            (1) a strength area with a large-format central rig,
+            (2) an endurance zone equipped with up to 42 cardio machines and 7 sled lanes.
+            Train strength and endurance specifically, without interference or limitations due to space or equipment.
+        </p>
+    </div>
+</section>
+
+<section class="pricing">
+
+    <h2>PRICING</h2>
+    <div class="pricing-tabs">
+        <button class="tab active" data-plan="monthly">Monthly</button>
+        <button class="tab" data-plan="quarterly">Quarterly</button>
+        <button class="tab" data-plan="yearly">Yearly</button>
+        <button class="tab" data-plan="passes">Passes</button>
+    </div>
+    <div class="pricing-cards" id="pricing-cards">
+    </div>
+</section>
+
+<div class="train">
+    <h1>BE THE FIRST TO TRAIN AT THE LARGEST GYM IN <strong id="name">NORTH MACEDONIA</strong></h1>
+</div>
+<div class="map-container">
+    <h1 id="where">WHERE WE ARE</h1>
+    <h1 id="grad">skopje</h1>
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d100194.00366203533!2d21.342317804539597!3d41.999188239056934!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x135415a58c9aa2a5%3A0xb2ed88c260872020!2sSkopje!5e1!3m2!1sen!2smk!4v1787139034648!5m2!1sen!2smk" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</div>
+
+<section class="booking" id="booking">
+    <div class="info">
+        <h1 id="title">BOOK YOUR <strong id="free">FREE</strong> TRIAL LESSON! </h1>
+        <div class="steps">
+            <p>1.Fill out the form.</p>
+            <p>2.We will send an email with the details.</p>
+            <p>3.We will call you to confirm the time for your trial lesson.</p>
+            <p>4.We'll be available via email, or phone for any questions.</p>
+            <p>5.We'll remind you of your class 24 hours in advance.</p>
+        </div>
+
+    </div>
+
+    <div class="form-container">
+
+        <form class="form">
+            <div class="form-group">
+                <p>Full Name</p>
+                <label for="first-name">First Name</label>
+                <input
+                        type="text"
+                        id="first-name"
+                        name="first-name"
+                        placeholder="John"
+                        required>
+                <label for="last-name">Last Name</label>
+                <input
+                        type="text"
+                        id="last-name"
+                        name="first-name"
+                        placeholder="Doe"
+                        required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+
+                <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="john@company.com"
+                        required>
+            </div>
+
+            <div class="form-group">
+                <label for="telephone">Telephone</label>
+
+                <input
+                        type="tel"
+                        id="telephone"
+                        name="telephone"
+                        placeholder="+389"
+                        required>
+            </div>
+
+            <div class="form-group">
+                <label for="experience">Level of Experience</label>
+
+                <select id="experience" name="experience" required>
+                    <option value="">Select one</option>
+                    <option value="without-experience">
+                        Without experience
+                    </option>
+                    <option value="a little experience">
+                        Have done CrossFit a couple of times
+                    </option>
+                    <option value="3-months">
+                        Have months of experience doing Crossfit
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="trial-date">Trial Day </label>
+
+                <input
+                        type="date"
+                        id="trial-date"
+                        name="trial-date"
+                        required>
+            </div>
+
+            <div class="form-group">
+                <label for="class-hour">Class Hour </label>
+                <select id="class-hour" name="class-hour" required>
+                    <option value="">Select a timetable</option>
+                    <option value="10:00">10:00 AM</option>
+                    <option value="14:15">2:15 PM</option>
+                    <option value="17:15">5:15 PM</option>
+                    <option value="18:15">6:15 PM</option>
+                    <option value="19:15">7:15 PM</option>
+                </select>
+                <small>If none of the hours suit you, we will look for the best one to suit your needs.</small>
+            </div>
+
+            <div class="privacy-check">
+                <input
+                        type="checkbox"
+                        id="privacy"
+                        name="privacy"
+                        required>
+                <label for="privacy">I read and accept the <a href="#" target="_blank">privacy policy</a>.</label>
+            </div>
+
+            <button type="submit">RESERVE</button>
+
+        </form>
+
+    </div>
+
+</section>
+<section class="workouts-section">
+    <h2>THE SCHEDULE</h2>
+    <div class="schedule-nav">
+        <button class="slider-arrow prev" onclick="previousWorkout()"> ← </button>
+
+        <div class="days-viewport">
+            <div class="days-track">
+                <span class="day-tab active" onclick="showWorkout(0)">MONDAY</span>
+                <span class="day-tab" onclick="showWorkout(1)">TUESDAY</span>
+                <span class="day-tab" onclick="showWorkout(2)">WEDNESDAY</span>
+                <span class="day-tab" onclick="showWorkout(3)">THURSDAY</span>
+                <span class="day-tab" onclick="showWorkout(4)">FRIDAY</span>
+            </div>
+        </div>
+
+        <button class="slider-arrow next" onclick="nextWorkout()"> → </button>
+    </div>
+    <section class="workouts-section">
+        <div class="workout-slider">
+
+            <div class="slider-viewport">
+
+                <div class="workout-track">
+
+                    <div class="workout-card active">
+
+                        <div class="workout-number">01 / 04</div>
+
+                        <h3>HYBRID</h3>
+
+                        <div class="workout-meta">
+                            <span>ALL LEVELS</span>
+                            <span class="separator">/</span>
+                            <span>60 MIN</span>
+                        </div>
+
+                        <p class="workout-description">
+                            Hybrid training combines different forms of exercise
+                            to develop strength, endurance and overall athletic performance.
+                        </p>
+
+                    </div>
+
+
+                    <div class="workout-card">
+
+                        <div class="workout-number">02 / 04</div>
+
+                        <h3>RUNNING</h3>
+
+                        <div class="workout-meta">
+                            <span>ALL LEVELS</span>
+                            <span class="separator">/</span>
+                            <span>60 MIN</span>
+                        </div>
+
+                        <p class="workout-description">
+                            Running sessions focus on endurance, speed and improving
+                            your overall cardiovascular fitness.
+                        </p>
+
+                    </div>
+
+
+                    <div class="workout-card">
+
+                        <div class="workout-number">03 / 04</div>
+
+                        <h3>CROSSFIT</h3>
+
+                        <div class="workout-meta">
+                            <span>ADVANCED</span>
+                            <span class="separator">/</span>
+                            <span>60 MIN</span>
+                        </div>
+
+                        <p class="workout-description">
+                            A mix of gymnastics, weightlifting and metabolic work.
+                            Perfect if you're looking for total performance and explosive strength.
+                        </p>
+
+                    </div>
+
+
+                    <div class="workout-card">
+
+                        <div class="workout-number">04 / 04</div>
+
+                        <h3>BARBELL</h3>
+
+                        <div class="workout-meta">
+                            <span>ADVANCED</span>
+                            <span class="separator">/</span>
+                            <span>60 MIN</span>
+                        </div>
+
+                        <p class="workout-description">
+                            A technical class focused on improving strength and power
+                            with the Olympic barbell. We train the Snatch and key lifts
+                            like Squats, Deadlift and Press.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+    <div class="contact">
+        <div class="text">
+            <h2>If you have any other questions, we’re available at this email.</h2>
+            <a href="mailto:info@example.com" class="button">EMAIL US</a>
+        </div>
+        <img src="images/phone3.jpg" class="phone">
+    </div>
+
+
+
+    <footer class="mt-auto text-white"
+            style="background: linear-gradient(135deg, #180000 0%, #4a0000 50%, #050505 100%);">
+
+        <div class="py-5">
+            <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
+
+                <div>
+                    <h4 class="mb-1">Ready to get started?</h4>
+                    <p class="mb-0 opacity-75">
+                        Start your fitness journey today with Mega Gym.
+                    </p>
+                </div>
+
+                <a href="http://localhost:63342/DP-project/DP-project/Skopje.html#booking" class="btn btn-light btn-lg flex-shrink-0">
+                    Join us now
+                </a>
+
+            </div>
+        </div>
+
+        <div class="py-3 border-top border-secondary">
+            <div class="container d-flex justify-content-between small text-white-50">
+
+                <span>&copy; 2026 Mega Gym</span>
+
+                <div class="d-flex gap-3">
+                    <a class="text-white-50 text-decoration-none" href="">Workouts</a>
+                    <a class="text-white-50 text-decoration-none" href="">Cities</a>
+                    <a class="text-white-50 text-decoration-none" href="">Contact</a>
+
+                </div>
+
+            </div>
+        </div>
+
+    </footer>
+
+    <script>
+        const video = document.getElementById("gymVideo");
+        video.playbackRate = 2.5;
+    </script>
+    <script>
+        let currentWorkout = 0;
+
+        const workoutCards = document.querySelectorAll(".workout-card");
+        const workoutTrack = document.querySelector(".workout-track");
+        const dayTabs = document.querySelectorAll(".day-tab");
+        const daysTrack = document.querySelector(".days-track");
+
+        function showWorkout(index) {
+            if (index < 0) {
+                index = workoutCards.length - 1;
+            }
+            if (index >= workoutCards.length) {
+                index = 0;
+            }
+            currentWorkout = index;
+
+            const cardWidth = workoutCards[0].offsetWidth + 30; // 30 matches the gap
+            workoutTrack.style.transform = `translateX(-${currentWorkout * cardWidth}px)`;
+
+            const dayWidth = dayTabs[0].offsetWidth;
+            daysTrack.style.transform = `translateX(-${currentWorkout * dayWidth}px)`;
+
+            dayTabs.forEach((tab, i) => {
+                if (i === currentWorkout) {
+                    tab.classList.add("active");
+                } else {
+                    tab.classList.remove("active");
+                }
+            });
+        }
+
+        function nextWorkout() {
+            showWorkout(currentWorkout + 1);
+        }
+
+        function previousWorkout() {
+            showWorkout(currentWorkout - 1);
+        }
+
+        workoutCards.forEach((card, index) => {
+            card.addEventListener("click", function() {
+                if (index !== currentWorkout) {
+                    showWorkout(index);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        const pricing = {
+
+            monthly: [
+                {
+                    name: "Unlimited",
+                    price: "€90/month",
+                    info: "Registration Fee (€50)"
+                },
+
+                {
+                    name: "12 classes/month",
+                    price: "€80/month",
+                    info: "Registration Fee (€50)"
+                },
+
+                {
+                    name: "9 classes/month",
+                    price: "€70/month",
+                    info: "Registration Fee (€50)"
+                }
+            ],
+            quarterly: [
+                {
+                    name: "Unlimited",
+                    price: "€80/month",
+                    info: "Without Registration"
+                },
+
+                {
+                    name: "15 classes/month",
+                    price: "€70/month",
+                    info: "Without Registration"
+                }
+            ],
+            yearly: [
+                {
+                    name: "Unlimited",
+                    price: "€75/month",
+                    info: "Without Registration"
+                }
+            ],
+            passes: [
+                {
+                    name: "1st Session",
+                    price: "€15",
+                    info: ""
+                },
+
+                {
+                    name: "5 Sessions",
+                    price: "€45",
+                    info: ""
+                },
+
+                {
+                    name: "10 Sessions",
+                    price: "€85",
+                    info: ""
+                }
+
+            ]
+
+        };
+
+
+        const tabs = document.querySelectorAll(".tab");
+        const pricingCards = document.getElementById("pricing-cards");
+
+
+        function showPrices(plan) {
+
+            pricingCards.innerHTML = "";
+
+            pricing[plan].forEach(item => {
+
+                const card = document.createElement("div");
+
+                card.classList.add("price-card");
+
+                card.innerHTML = `
+      <h3>${item.name}</h3>
+
+      <p class="price">${item.price}</p>
+
+      <p class="info">${item.info}</p>
+    `;
+
+                pricingCards.appendChild(card);
+
+            });
+
+        }
+
+
+        tabs.forEach(tab => {
+
+            tab.addEventListener("click", () => {
+
+                tabs.forEach(t => {
+                    t.classList.remove("active");
+                });
+
+                tab.classList.add("active");
+
+                const plan = tab.dataset.plan;
+
+                showPrices(plan);
+
+            });
+
+        });
+
+
+        showPrices("monthly");
+    </script>
+</section>
+<script>
+    const pageTranslations = {
+        "Workouts":"Тренинзи", "Cities":"Градови", "Skopje":"Скопје", "Ohrid":"Охрид", "Bitola":"Битола", "Tetovo":"Тетово", "SKOPJE":"СКОПЈЕ", "skopje":"Скопје",
+        "THE SPACE":"ПРОСТОРОТ", "You can search, but there’s nothing like it in Skopje. More than 500 m² of hybrid training space divided into two areas: (1) a strength area with a large-format central rig, (2) an endurance zone equipped with up to 42 cardio machines and 7 sled lanes. Train strength and endurance specifically, without interference or limitations due to space or equipment.":"Може да барате, но вакво нешто нема на друго место во Скопје. Повеќе од 500 м² простор за хибриден тренинг, поделен на две зони: (1) зона за сила со голема централна конструкција, (2) зона за издржливост со до 42 кардио-справи и 7 патеки за санки. Тренирајте сила и издржливост целно, без ограничувања поради просторот или опремата.",
+        "PRICING":"ЦЕНИ", "Monthly":"Месечно", "Quarterly":"На три месеци", "Yearly":"Годишно", "Passes":"Пакети", "Unlimited":"Неограничено", "12 classes/month":"12 тренинзи месечно", "9 classes/month":"9 тренинзи месечно", "15 classes/month":"15 тренинзи месечно", "1st Session":"Прв тренинг", "5 Sessions":"5 тренинзи", "10 Sessions":"10 тренинзи", "Registration Fee (€50)":"Уписнина (€50)", "Without Registration":"Без уписнина",
+        "BE THE FIRST TO TRAIN AT THE LARGEST GYM IN":"БИДЕТЕ МЕЃУ ПРВИТЕ ШТО ЌЕ ТРЕНИРААТ ВО НАЈГОЛЕМАТА ТЕРЕТАНА ВО", "NORTH MACEDONIA":"СЕВЕРНА МАКЕДОНИЈА", "WHERE WE ARE":"КАДЕ СЕ НАОЃАМЕ", "BOOK YOUR":"РЕЗЕРВИРАЈТЕ ГО ВАШИОТ", "FREE":"БЕСПЛАТЕН", "TRIAL LESSON!":"ПРОБЕН ТРЕНИНГ!",
+        "1.Fill out the form.":"1. Пополнете го формуларот.", "2.We will send an email with the details.":"2. Ќе ви испратиме е-пошта со деталите.", "3.We will call you to confirm the time for your trial lesson.":"3. Ќе ви се јавиме за да го потврдиме времето за пробниот тренинг.", "4.We'll be available via email, or phone for any questions.":"4. За прашања, достапни сме преку е-пошта или телефон.", "5.We'll remind you of your class 24 hours in advance.":"5. Ќе ве потсетиме за тренингот 24 часа однапред.",
+        "Full Name":"Име и презиме", "First Name":"Име", "Last Name":"Презиме", "Email":"Е-пошта", "Telephone":"Телефон", "Level of Experience":"Ниво на искуство", "Select one":"Изберете", "Without experience":"Без искуство", "Have done CrossFit a couple of times":"Сум вежбал/а CrossFit неколку пати", "Have months of experience doing Crossfit":"Имам неколку месеци искуство со CrossFit", "Trial Day":"Ден за пробен тренинг", "Class Hour":"Време на тренинг", "Select a timetable":"Изберете термин", "10:00 AM":"10:00", "2:15 PM":"14:15", "5:15 PM":"17:15", "6:15 PM":"18:15", "7:15 PM":"19:15", "If none of the hours suit you, we will look for the best one to suit your needs.":"Ако ниту еден термин не ви одговара, ќе го најдеме најсоодветниот за вас.", "I read and accept the":"Прочитав и се согласувам со", "privacy policy":"политиката за приватност", "RESERVE":"РЕЗЕРВИРАЈ",
+        "THE SCHEDULE":"РАСПОРЕД НА ТРЕНИНЗИ", "MONDAY":"ПОНЕДЕЛНИК", "TUESDAY":"ВТОРНИК", "WEDNESDAY":"СРЕДА", "THURSDAY":"ЧЕТВРТОК", "FRIDAY":"ПЕТОК", "ALL LEVELS":"ЗА СИТЕ НИВОА", "ADVANCED":"НАПРЕДНО НИВО", "60 MIN":"60 МИН",
+        "Hybrid training combines different forms of exercise to develop strength, endurance and overall athletic performance.":"Хибридниот тренинг комбинира различни видови вежби за развој на силата, издржливоста и севкупните спортски перформанси.", "Running sessions focus on endurance, speed and improving your overall cardiovascular fitness.":"Тренинзите по трчање се фокусираат на издржливоста, брзината и подобрувањето на кардиоваскуларната кондиција.", "A mix of gymnastics, weightlifting and metabolic work. Perfect if you're looking for total performance and explosive strength.":"Комбинација од гимнастика, кревање тегови и метаболички вежби. Одличен избор за севкупни перформанси и експлозивна сила.", "A technical class focused on improving strength and power with the Olympic barbell. We train the Snatch and key lifts like Squats, Deadlift and Press.":"Технички тренинг за подобрување на силата и моќта со олимписка шипка. Вежбаме исфрлање и основни движења како чучњеви, мртво кревање и потисок.",
+        "If you have any other questions, we’re available at this email.":"Ако имате дополнителни прашања, пишете ни на оваа е-пошта.", "EMAIL US":"ИСПРАТЕТЕ НИ Е-ПОШТА", "Ready to get started?":"Подготвени сте да започнете?", "Start your fitness journey today with Mega Gym.":"Започнете го вашето фитнес-патување денес со Mega Gym.", "Join us now":"Придружете ни се", "Contact":"Контакт", "Title":"Скопје"
+    };
+
+
+    const originalText = new WeakMap();
+    let pageLanguage = 'en';
+
+    function changeLanguage(language) {
+        if (!['en', 'mk'].includes(language)) return;
+
+        pageLanguage = language;
+        document.documentElement.lang = language;
+
+        const walker = document.createTreeWalker(
+            document.body,
+            NodeFilter.SHOW_TEXT
+        );
+
+        let node;
+
+        while (node = walker.nextNode()) {
+            if (['SCRIPT', 'STYLE'].includes(node.parentElement?.tagName)) continue;
+
+            if (!originalText.has(node))
+                originalText.set(node, node.nodeValue);
+
+            const original = originalText.get(node);
+            const text = original.trim().replace(/\s+/g, ' ');
+
+            node.nodeValue = language === 'mk'
+                ? original.replace(original.trim(), pageTranslations[text] || original.trim())
+                : original;
+        }
+
+        document.querySelectorAll('[placeholder], img[alt]').forEach(element => {
+            const attr = element.hasAttribute('placeholder') ? 'placeholder' : 'alt';
+            const key = attr === 'placeholder' ? 'originalPlaceholder' : 'originalAlt';
+
+            if (!element.dataset[key])
+                element.dataset[key] = element[attr];
+
+            const original = element.dataset[key];
+
+            element[attr] = language === 'mk'
+                ? ({ John: 'Јован', Doe: 'Петров' }[original] || pageTranslations[original] || original)
+                : original;
+        });
+
+        document.querySelectorAll('.language-bar button').forEach(button => {
+            button.setAttribute(
+                'aria-pressed',
+                String(button.textContent.trim().toLowerCase() === language)
+            );
+        });
+
+        document.title = language === 'mk'
+            ? 'Скопје | Mega Gym'
+            : 'Skopje | Mega Gym';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        changeLanguage('en');
+
+        const cards = document.getElementById('pricing-cards');
+
+        if (cards) {
+            new MutationObserver(() => changeLanguage(pageLanguage))
+                .observe(cards, { childList: true, subtree: true });
+        }
+    });
+
+
+</script>
+</body>
+</html>
