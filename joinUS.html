@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MEGA GYM JOIN US</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .booking-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            align-items: center;
+            padding: 48px 8%;
+            background: #080808;
+            color: #fff;
+        }
+
+        .booking-copy h1 {
+            font: clamp(40px, 6vw, 72px)/1 'Anton', sans-serif;
+        }
+
+        .booking-copy h1 span {
+            color: #740102;
+        }
+
+        .booking-copy p {
+            line-height: 1.6;
+        }
+
+        .booking-copy li {
+            margin: 12px 0;
+        }
+
+        .form-container {
+            padding: 26px;
+            background: #fff;
+            color: #111;
+            border-top: 4px solid #740102;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group p {
+            margin: 0 0 8px;
+            font-weight: 700;
+        }
+
+        .form-group label {
+            display: block;
+            margin: 8px 0 5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            font: 14px 'Montserrat', sans-serif;
+        }
+
+        .privacy-check {
+            display: flex;
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .form button {
+            width: 100%;
+            padding: 12px;
+            border: 0;
+            color: #fff;
+            background: #740102;
+            font-weight: 700;
+        }
+
+        @media (max-width: 760px) {
+            .booking-section {
+                grid-template-columns: 1fr;
+                padding: 32px 6%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="language-bar">
+    <button type="button" onclick="changeLanguage('mk')">MK</button>
+    <span>|</span>
+    <button type="button" onclick="changeLanguage('en')">EN</button>
+</div>
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="home.html">
+            <img src="images/logo_top.png" alt="Logo">
+        </a>
+
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarMenu"
+                aria-controls="navbarMenu"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarMenu">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="workouts.html" data-en="Workouts" data-mk="Тренинзи">Workouts</a>
+                </li>
+
+                <li class="nav-item cities-dropdown">
+                    <a class="nav-link cities-link" href="#" data-en="Cities" data-mk="Градови">Cities</a>
+                    <ul class="custom-menu">
+                        <li><a href="Skopje.html" data-en="Skopje" data-mk="Скопје">Skopje</a></li>
+                        <li><a href="Ohrid.html" data-en="Ohrid" data-mk="Охрид">Ohrid</a></li>
+                        <li><a href="Bitola.html" data-en="Bitola" data-mk="Битола">Bitola</a></li>
+                        <li><a href="Tetovo.html" data-en="Tetovo" data-mk="Тетово">Tetovo</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main class="booking-section">
+    <section class="booking-copy">
+        <p data-en="START YOUR FITNESS JOURNEY" data-mk="ЗАПОЧНЕТЕ ГО ВАШЕТО ФИТНЕС-ПАТУВАЊЕ">
+            START YOUR FITNESS JOURNEY
+        </p>
+
+        <h1>
+            <span data-en="BOOK YOUR FREE CLASS" data-mk="РЕЗЕРВИРАЈТЕ БЕСПЛАТЕН ТРЕНИНГ">
+                BOOK YOUR FREE CLASS
+            </span>
+        </h1>
+
+        <p
+                data-en="Fill out the form to request a free trial class. We’ll contact you to confirm your visit."
+                data-mk="Пополнете го формуларот за бесплатен пробен тренинг. Ќе ве контактираме за да ја потврдиме вашата посета.">
+            Fill out the form to request a free trial class. We’ll contact you to confirm your visit.
+        </p>
+
+        <ol>
+            <li data-en="Complete the form." data-mk="Пополнете го формуларот.">Complete the form.</li>
+            <li data-en="Choose a day and class time." data-mk="Изберете ден и термин за тренинг.">Choose a day and class time.</li>
+            <li data-en="We’ll contact you to confirm your free class." data-mk="Ќе ве контактираме за да го потврдиме бесплатниот тренинг.">
+                We’ll contact you to confirm your free class.
+            </li>
+        </ol>
+    </section>
+
+    <div class="form-container">
+        <form class="form">
+            <div class="form-group">
+                <p data-en="Full Name" data-mk="Име и презиме">Full Name</p>
+
+                <label for="first-name" data-en="First Name" data-mk="Име">First Name</label>
+                <input type="text" id="first-name" name="first-name" placeholder="John" required>
+
+                <label for="last-name" data-en="Last Name" data-mk="Презиме">Last Name</label>
+                <input type="text" id="last-name" name="last-name" placeholder="Doe" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email" data-en="Email" data-mk="Е-пошта">Email</label>
+                <input type="email" id="email" name="email" placeholder="john@company.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="telephone" data-en="Telephone" data-mk="Телефон">Telephone</label>
+                <input type="tel" id="telephone" name="telephone" placeholder="+389" required>
+            </div>
+
+            <div class="form-group">
+                <label for="experience" data-en="Level of Experience" data-mk="Ниво на искуство">Level of Experience</label>
+                <select id="experience" name="experience" required>
+                    <option value="" data-en="Select one" data-mk="Изберете">Select one</option>
+                    <option value="without-experience" data-en="Without experience" data-mk="Без претходно искуство">Without experience</option>
+                    <option value="a-little-experience" data-en="Have done CrossFit a couple of times" data-mk="Имам пробано CrossFit неколку пати">Have done CrossFit a couple of times</option>
+                    <option value="3-months" data-en="Have months of experience doing CrossFit" data-mk="Имам неколку месеци искуство со CrossFit">Have months of experience doing CrossFit</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="trial-date" data-en="Trial Day" data-mk="Ден за пробен тренинг">Trial Day</label>
+                <input type="date" id="trial-date" name="trial-date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="class-hour" data-en="Class Hour" data-mk="Време на тренинг">Class Hour</label>
+                <select id="class-hour" name="class-hour" required>
+                    <option value="" data-en="Select a timetable" data-mk="Изберете термин">Select a timetable</option>
+                    <option value="10:00">10:00 AM</option>
+                    <option value="14:15">2:15 PM</option>
+                    <option value="17:15">5:15 PM</option>
+                    <option value="18:15">6:15 PM</option>
+                    <option value="19:15">7:15 PM</option>
+                </select>
+                <small
+                        data-en="If none of these times suit you, we’ll help find another option."
+                        data-mk="Ако ниту еден од овие термини не ви одговара, ќе најдеме друга можност.">
+                    If none of these times suit you, we’ll help find another option.
+                </small>
+            </div>
+
+            <div class="privacy-check">
+                <input type="checkbox" id="privacy" name="privacy" required>
+                <label for="privacy">
+                    <span data-en="I read and accept the" data-mk="Ја прочитав и се согласувам со">I read and accept the</span>
+                    <a href="#" target="_blank" data-en="privacy policy" data-mk="политиката за приватност">privacy policy</a>.
+                </label>
+            </div>
+
+            <button type="submit" data-en="RESERVE" data-mk="РЕЗЕРВИРАЈ">RESERVE</button>
+        </form>
+    </div>
+</main>
+
+<footer class="mt-auto text-white"
+        style="background: linear-gradient(135deg, #180000 0%, #4a0000 50%, #050505 100%);">
+    <div class="py-5">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div>
+                <h4 class="mb-1" data-en="Ready to get started?" data-mk="Подготвени сте да започнете?">
+                    Ready to get started?
+                </h4>
+                <p class="mb-0 opacity-75"
+                   data-en="Start your fitness journey today with Mega Gym."
+                   data-mk="Започнете го вашето фитнес-патување денес со Mega Gym.">
+                    Start your fitness journey today with Mega Gym.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="py-3 border-top border-secondary">
+        <div class="container d-flex justify-content-between small text-white-50">
+            <span>&copy; 2026 Mega Gym</span>
+            <div class="d-flex gap-3">
+                <a class="text-white-50 text-decoration-none" href="" data-en="Workouts" data-mk="Тренинзи">Workouts</a>
+                <a class="text-white-50 text-decoration-none" href="" data-en="Cities" data-mk="Градови">Cities</a>
+                <a class="text-white-50 text-decoration-none" href="" data-en="Contact" data-mk="Контакт">Contact</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="script.js"></script>
+
+<script>
+    function changeLanguage(language) {
+        const selectedLanguage = language === "mk" ? "mk" : "en";
+        document.documentElement.lang = selectedLanguage;
+
+        document.querySelectorAll("[data-en][data-mk]").forEach(element => {
+            const translatedText = element.getAttribute("data-" + selectedLanguage);
+            if (translatedText !== null) element.textContent = translatedText;
+        });
+    }
+
+    window.changeLanguage = changeLanguage;
+</script>
+
+<script src="language-preference.js"></script>
+</body>
+</html>
